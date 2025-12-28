@@ -48,7 +48,7 @@ const ProfilePage = () => {
     <div>
       <ProfileCard profile={profile} postCount={posts?.[0]?.count || 0} />
       <PostGrid posts={posts} isPending={isPending} />
-      <Pagination filterData={filterData} setFilterData={setFilterData} totalPageCount={Math.ceil(posts?.[0].count / 50)} />
+      {posts?.[0].count && <Pagination filterData={filterData} setFilterData={setFilterData} totalPageCount={Math.ceil(posts?.[0].count / 50)} />}
     </div>
   );
 };
