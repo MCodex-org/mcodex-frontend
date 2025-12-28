@@ -41,14 +41,14 @@ const ProfilePage = () => {
 
   const { data: posts, isPending } = useFetchPosts(filterData);
 
-  if (loading) return <span className="loading loading-spinner" />;
+  if (loading || isPending) return <span className="loading loading-spinner" />;
   if (error) return <p>{error}</p>;
 
   return (
     <div>
       <ProfileCard profile={profile} postCount={posts?.[0]?.count || 0} />
       <PostGrid posts={posts} isPending={isPending} />
-      {posts?.[0].count && <Pagination filterData={filterData} setFilterData={setFilterData} totalPageCount={Math.ceil(posts?.[0].count / 50)} />}
+      { posts?.[0]?.count !== undefined && <Pagination filterData={filterData} setFilterData={setFilterData} totalPageCount={Math.ceil(posts?.[0].count / 50)} /> }
     </div>
   );
 };
