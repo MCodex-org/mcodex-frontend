@@ -97,7 +97,7 @@ const TriSelect = ({
         <span className="truncate text-left">{summary}</span>
         <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 opacity-60" viewBox="0 0 20 20" fill="currentColor"><path fillRule="evenodd" d="M5.23 7.21a.75.75 0 011.06.02L10 10.94l3.71-3.71a.75.75 0 111.06 1.06l-4.24 4.24a.75.75 0 01-1.06 0L5.21 8.29a.75.75 0 01.02-1.08z" clipRule="evenodd" /></svg>
       </div>
-      <ul tabIndex={0} className="dropdown-content menu bg-base-200 rounded-box z-[1] w-80 p-2 shadow max-h-64 overflow-auto">
+      <ul tabIndex={0} className="dropdown-content menu bg-base-200 rounded-box z-1 w-80 p-2 shadow max-h-64 overflow-auto">
         {options?.map((opt) => {
           const state = stateById[opt.id] ?? "none";
           return (

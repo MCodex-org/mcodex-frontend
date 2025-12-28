@@ -44,7 +44,7 @@ export const Carousel = ({ image_urls = [], video_urls = [] }) => {
           <div id={`item${index + 1}`} key={index} className="carousel-item w-full aspect-video overflow-hidden bg-black">
               {item.type === "image" && (
                 <img
-                  src={CDN_URL + item.src}
+                  src={CDN_URL + "/" + item.src}
                   className="w-full h-full object-contain" />
               )}
               {item.type === "youtube" && (
@@ -804,7 +804,7 @@ export const Schems = ({ schems }) => {
 
         {schems?.map((schem, index) => (
           <li key={index} className="list-row items-center font-bold">
-            <a href={CDN_URL + schem} download={schem.split("-").slice(1).join("-")} className="btn btn-primary btn-square"><Download /></a>
+            <a href={CDN_URL + "/" + schem} download={schem.split("-").slice(1).join("-")} className="btn btn-primary btn-square"><Download /></a>
             {schem.split("-").slice(1).join("-")}
           </li>
         ))}
@@ -819,7 +819,7 @@ export const Wdl = ({ wdl }) => {
       <ul className="list bg-base-200 rounded-box shadow-md mb-4 w-full">
         <li className="p-4 pb-2 text-xs opacity-60 tracking-wide">World Download</li>
           <li className="list-row items-center font-bold">
-            <a href={CDN_URL + wdl} download={wdl?.split("-").slice(1).join("-")} className="btn btn-primary btn-square"><Download /></a>
+            <a href={CDN_URL + "/" + wdl} download={wdl?.split("-").slice(1).join("-")} className="btn btn-primary btn-square"><Download /></a>
             {wdl?.split("-").slice(1).join("-")}
           </li>
       </ul>

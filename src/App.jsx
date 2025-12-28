@@ -6,10 +6,10 @@ import Footer from "./components/Footer";
 const App = () => {
   
   return (
-    <div className="min-h-screen">
+    <div>
       <aside></aside>
       <NavBar />
-      <main className="pt-16">
+      <main className="pt-16 min-h-screen">
         <Outlet />
         <Toaster position="bottom-left" />
         <ScrollRestoration getKey={(location) => location.pathname} />
