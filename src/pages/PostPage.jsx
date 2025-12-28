@@ -59,7 +59,7 @@ const PostPage = () => {
           />
         </div>
         <div>
-          {!post?.approved && <div className="bg-warning font-bold p-4 mb-4">
+          {post?.approval_status !== 1 && <div className="bg-warning font-bold p-4 mb-4">
             NOT APPROVED YET
           </div>}
           {post?.translations[0]?.output && <Output output={post?.translations[0]?.output} />}

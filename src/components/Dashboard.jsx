@@ -46,7 +46,7 @@ const PostList = ({ posts, refetch }) => {
                 {post?.available_translations.length > 0 ? post.available_translations.join(", ") : <div className="badge badge-error badge-soft">No translations</div>}
               </td>
               <td>
-                {post.approved ? <div className="badge badge-primary">Approved</div> : <div className="badge badge-error">Not approved</div>}
+                {post.approval_status === 1 ? <div className="badge badge-primary">Approved</div> : <div className="badge badge-error">Not approved</div>}
               </td>
               <th>
                 <div className="dropdown dropdown-end">
