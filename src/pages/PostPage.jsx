@@ -3,11 +3,24 @@ import { useFetchPost, useVote } from "../hooks/usePosts";
 import { MessageCircle, Share2 } from "lucide-react";
 import toast from "react-hot-toast";
 import { Carousel, Categories, Credits, Designers, Output, Schems, Tags, Versions, Wdl, Vote } from "../components/PostComponents";
+import { useAuthStore } from "../stores/authStore";
 
 const PostPage = () => {
   const { id: postId } = useParams();
   const { data: post, isPending, error } = useFetchPost(postId);
-  const { mutate: vote, error: voteError } = useVote(postId);
+  const { user, profile } = useAuthStore();
+  const { mutate: mutateVote, error: voteError } = useVote(postId);
+
+  const vote = (v) => {
+    if (!user) {
+      toast.error("Log in to vote");
+      return;
+    } else if (!profile) {
+      toast.error("Finish profile to vote");
+      return;
+    }
+    mutateVote(v);
+  }
 
   if (isPending) {
     return (
@@ -22,11 +35,7 @@ const PostPage = () => {
   }
 
   if (voteError) {
-    if (voteError.status === 401) {
-      toast.error("Log in to vote");
-    } else {
-      toast.error("Failed to vote");
-    }
+    toast.error("Failed to vote");
   }
 
   return (
