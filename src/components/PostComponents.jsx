@@ -803,10 +803,10 @@ export const Schems = ({ schems }) => {
         <li className="p-4 pb-2 text-xs opacity-60 tracking-wide">Schematics</li>
 
         {schems?.map((schem, index) => (
-          <li key={index} className="list-row items-center font-bold">
-            <a href={CDN_URL + "/" + schem} download={schem.split("-").slice(1).join("-")} className="btn btn-primary btn-square"><Download /></a>
+          <a key={index} href={CDN_URL + "/" + schem} download={schem.split("-").slice(1).join("-")} className="list-row items-center font-bold">
+            <div className="btn btn-primary btn-square"><Download /></div>
             {schem.split("-").slice(1).join("-")}
-          </li>
+          </a>
         ))}
       </ul>
     </div>
@@ -818,10 +818,10 @@ export const Wdl = ({ wdl }) => {
     <div>
       <ul className="list bg-base-200 rounded-box shadow-md mb-4 w-full">
         <li className="p-4 pb-2 text-xs opacity-60 tracking-wide">World Download</li>
-          <li className="list-row items-center font-bold">
-            <a href={CDN_URL + "/" + wdl} download={wdl?.split("-").slice(1).join("-")} className="btn btn-primary btn-square"><Download /></a>
+          <a href={CDN_URL + "/" + wdl} download={wdl?.split("-").slice(1).join("-")} className="list-row items-center font-bold">
+            <div className="btn btn-primary btn-square"><Download /></div>
             {wdl?.split("-").slice(1).join("-")}
-          </li>
+          </a>
       </ul>
     </div>
   );
@@ -842,7 +842,7 @@ export const Vote = ({ initialCount, initialVote, onVote }) => {
 };
 
 export const DownloadsModal = ({ postId }) => {
-  const { data: downloads, isPending, refetch } = useFetchDownloads(postId);
+  const { data: downloads, isFetching, refetch } = useFetchDownloads(postId);
 
   const handleShowDownloads = async (e) => {
     e.preventDefault();
@@ -859,7 +859,7 @@ export const DownloadsModal = ({ postId }) => {
         className="btn btn-square btn-primary mx-2"
         onClick={handleShowDownloads}
       >
-          <Download />
+        { isFetching ? <span className="loading loading-spinner" /> : <Download /> }
       </button>
       <dialog id={`downloads_modal_${postId}`} className="modal w-full cursor-default" onClick={(e) => e.stopPropagation()}>
         <div className="modal-box">
