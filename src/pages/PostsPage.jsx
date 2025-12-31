@@ -49,7 +49,7 @@ const PostsPage = () => {
         <img src={cover} className="object-cover w-full h-full" />
       </div>
       <Filters realFilterData={filterData} setRealFilterData={setFilterData} />
-      <div className="flex justify-between">
+      <div className="flex flex-col items-center md:flex-row md:justify-between">
         <SearchBar filterData={filterData} setFilterData={setFilterData} />
         <Sort filterData={filterData} setFilterData={setFilterData} />
       </div>

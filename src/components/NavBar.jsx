@@ -41,6 +41,8 @@ const NavBar = () => {
               </div> :
               <li><Link to="/login">Log in</Link></li>
             }
+
+            <li><Link to={import.meta.env.VITE_DISCORD_INVITE_URL}>Discord Server</Link></li>
           </ul>
         </div>
         <Link to="/" className="flex items-center mx-3 gap-1.5">
@@ -51,7 +53,7 @@ const NavBar = () => {
           </div>
         </Link>
 
-        <div className="join">
+        <div className="join hidden lg:inline-flex">
           <select className="select join-item" defaultValue={by} onChange={(e) => {setBy(e.target.value)}}>
             <option value="posts">Posts</option>
             <option value="output">Output</option>

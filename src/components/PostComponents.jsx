@@ -283,39 +283,49 @@ export const Filters = ({ realFilterData, setRealFilterData }) => {
       </div>
 
       <div className="justify-center p-4 gap-4" hidden={!expanded}>
-        <div className="flex flex-row justify-center">
-          <div className="w-96">
-            <input
-              type="checkbox" 
-              className="checkbox mx-2 my-1" 
-              checked={filterData.recommended || false}
-              onChange={(e) => setFilterData((prev) => ({ ...prev, recommended: e.target.checked }))}
-            /> Show only recommended <br />
-            <input
-              type="checkbox"
-              className="checkbox mx-2 my-1"
-              disabled
-            /> Show posts in other languages <br />
-            <input
-              type="checkbox"
-              className="checkbox mx-2 my-1"
-              disabled
-            /> Show only posts with tutorials <br />
-            <input
-              type="checkbox"
-              className="checkbox mx-2 my-1"
-              checked={filterData.schems || false}
-              onChange={(e) => setFilterData((prev) => ({ ...prev, schems: e.target.checked }))}
-            /> Show only posts with schematics <br />
-            <input
-              type="checkbox"
-              className="checkbox mx-2 my-1"
-              checked={filterData.wdl || false}
-              onChange={(e) => setFilterData((prev) => ({ ...prev, wdl: e.target.checked }))}
-            /> Show only posts with world download <br />
+        <div className="flex flex-col justify-center items-center gap-4 sm:flex-row">
+          <div className="flex flex-col w-96 px-4">
+            <div className="flex">
+              <input
+                type="checkbox" 
+                className="checkbox mx-2 my-1" 
+                checked={filterData.recommended || false}
+                onChange={(e) => setFilterData((prev) => ({ ...prev, recommended: e.target.checked }))}
+              /> <div>Show only recommended</div>
+            </div>
+            <div className="flex">
+              <input
+                type="checkbox"
+                className="checkbox mx-2 my-1"
+                disabled
+              /> <div>Show posts in other languages</div>
+            </div>
+            <div className="flex">
+              <input
+                type="checkbox"
+                className="checkbox mx-2 my-1"
+                disabled
+              /> <div>Show only posts with tutorials</div>
+            </div>
+            <div className="flex">
+              <input
+                type="checkbox"
+                className="checkbox mx-2 my-1"
+                checked={filterData.schems || false}
+                onChange={(e) => setFilterData((prev) => ({ ...prev, schems: e.target.checked }))}
+              /> <div>Show only posts with schematics</div>
+            </div>
+            <div className="flex">
+              <input
+                type="checkbox"
+                className="checkbox mx-2 my-1"
+                checked={filterData.wdl || false}
+                onChange={(e) => setFilterData((prev) => ({ ...prev, wdl: e.target.checked }))}
+              /> <div>Show only posts with a world download</div>
+            </div>
           </div>
 
-          <div className="w-96">
+          <div className="flex flex-col justify-center items-center w-96">
             <select
               value={filterData.category}
               className="select mb-2"
@@ -341,7 +351,7 @@ export const Filters = ({ realFilterData, setRealFilterData }) => {
                 ))}
             </select>
 
-            <div className="dropdown mb-2 w-full">
+            <div className="flex dropdown mb-2 w-full justify-center">
               <div tabIndex={0} role="button" className="select cursor-default">Filter by tags</div>
               <ul tabIndex="-1" className="dropdown-content menu bg-base-100 border border-base-300 rounded-box z-1 p-2 w-80 shadow-2xl">
                 <input type="text" className="input input-sm mb-2" placeholder="search" onChange={handleSearch} />
@@ -637,7 +647,7 @@ export const SearchBar = ({ filterData, setFilterData }) => {
         type="text"
         defaultValue={search}
         placeholder="Search"
-        className="input w-64"
+        className="input w-40 lg:w-64"
         onChange={(e) => setSearch(e.target.value.trim())}
         onKeyDown={(e) => {
           if (e.key === 'Enter') {
@@ -660,7 +670,7 @@ export const SearchBar = ({ filterData, setFilterData }) => {
 
 export const Sort = ({ filterData, setFilterData }) => {
   return (
-    <div className="flex justify-end w-full items-center mx-4 gap-2">
+    <div className="flex items-center mx-4 my-2 gap-2 md:w-full md:justify-end md:my-0">
       Sort by:
       <select
         value={filterData.sort || "latest"}
