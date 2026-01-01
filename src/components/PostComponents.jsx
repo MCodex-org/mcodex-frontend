@@ -753,18 +753,42 @@ export const Tags = ({ tags }) => {
 };
 
 export const Versions = ({ versions }) => {
+  const buildRanges = (versions) => {
+    const sorted = [...versions].sort((a, b) => a.id - b.id);
+    
+    const ranges = [];
+    let start = sorted[0];
+    let prev = sorted[0];
+
+    for (let i = 1; i < sorted.length; i++) {
+      const curr = sorted[i];
+
+      if (curr.id !== prev.id + 1) {
+        ranges.push({ from: start, to: prev });
+        start = curr;
+      }
+
+      prev = curr;
+    }
+
+    ranges.push({ from: start, to: prev });
+
+    return ranges;
+  };
+
+  const ranges = buildRanges(versions);
+
   return (
     <div className="bg-base-200 rounded-box shadow-md mb-4 md:w-3xs lg:w-xs 2xl:w-md">
       <div className="p-4 pb-2 text-xs opacity-60 tracking-wide">Versions</div>
       <div className="p-4 pt-2">
-        {versions?.map((v, index) => (
-            <Link
+        {ranges?.map((range, index) => (
+            <div
               key={index}
               className="badge badge-sm badge-primary me-1 mb-2"
-              to={`/posts?version=${v.id}`}
             >
-              {v.name}
-            </Link>
+              { range.from.id === range.to.id ? range.from.name : `${range.from.name} - ${range.to.name}` }
+            </div>
         ))}
       </div>
     </div>
