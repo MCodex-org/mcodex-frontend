@@ -307,7 +307,7 @@ export const Filters = ({ realFilterData, setRealFilterData }) => {
       <div className="justify-center p-4 gap-4" hidden={!expanded}>
         <div className="flex flex-col justify-center items-center gap-4 sm:flex-row">
           <div className="flex flex-col w-96 px-4">
-            <div className="flex">
+            <div className="flex items-center">
               <input
                 type="checkbox" 
                 className="checkbox mx-2 my-1" 
@@ -315,21 +315,21 @@ export const Filters = ({ realFilterData, setRealFilterData }) => {
                 onChange={(e) => setFilterData((prev) => ({ ...prev, recommended: e.target.checked }))}
               /> <div>Show only recommended</div>
             </div>
-            <div className="flex">
+            <div className="flex items-center">
               <input
                 type="checkbox"
                 className="checkbox mx-2 my-1"
                 disabled
               /> <div>Show posts in other languages</div>
             </div>
-            <div className="flex">
+            <div className="flex items-center">
               <input
                 type="checkbox"
                 className="checkbox mx-2 my-1"
                 disabled
               /> <div>Show only posts with tutorials</div>
             </div>
-            <div className="flex">
+            <div className="flex items-center">
               <input
                 type="checkbox"
                 className="checkbox mx-2 my-1"
@@ -337,7 +337,7 @@ export const Filters = ({ realFilterData, setRealFilterData }) => {
                 onChange={(e) => setFilterData((prev) => ({ ...prev, schems: e.target.checked }))}
               /> <div>Show only posts with schematics</div>
             </div>
-            <div className="flex">
+            <div className="flex items-center">
               <input
                 type="checkbox"
                 className="checkbox mx-2 my-1"
