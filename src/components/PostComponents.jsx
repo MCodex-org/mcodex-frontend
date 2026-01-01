@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { ArrowBigUp, ArrowBigDown, Bookmark, Download, ListFilter, Check, Plus, Minus } from "lucide-react";
 import { Link, useNavigate } from "react-router-dom";
 import { useMetaStore } from "../stores/metaStore";
@@ -8,6 +8,21 @@ import { useFetchDownloads } from "../hooks/usePosts";
 const CDN_URL = import.meta.env.VITE_CDN_URL;
 
 export const Carousel = ({ image_urls = [], video_urls = [] }) => {
+  const [activeIndex, setActiveIndex] = useState(0);
+
+  useEffect(() => {
+    const carousel = document.querySelector(".carousel");
+    if (!carousel) return;
+  
+    const onScroll = () => {
+      const index = Math.round(carousel.scrollLeft / carousel.clientWidth);
+      setActiveIndex(index);
+    };
+  
+    carousel.addEventListener("scroll", onScroll);
+    return () => carousel.removeEventListener("scroll", onScroll);
+  }, []);
+
   const media = [
     ...(video_urls || []).map((url) => {
       if (url.includes("youtube.com") || url.includes("youtu.be")) {
@@ -25,16 +40,16 @@ export const Carousel = ({ image_urls = [], video_urls = [] }) => {
 
   if (media.length === 0) return;
 
-  const goTo = (e) => {
+  const goTo = (e, index) => {
     e.preventDefault();
     const btn = e.currentTarget;
 
     const carousel = document.querySelector(".carousel");
 
-    const href = btn.getAttribute("href");
-    const target = carousel.querySelector(href);
+    const target = carousel.querySelector(`#item${index + 1}`);
     const left = target.offsetLeft;
     carousel.scrollTo({ left: left });
+    setActiveIndex(index);
   };
 
   return (
@@ -70,7 +85,14 @@ export const Carousel = ({ image_urls = [], video_urls = [] }) => {
       </div>
       <div className="flex justify-center gap-2 py-2">
         {media?.map((_, index) => (
-          <a onClick={goTo} key={index} href={`#item${index + 1}`} className="btn btn-xs">{index + 1}</a>
+          <a
+            key={index}
+            href={`#item${index + 1}`}
+            onClick={(e) => goTo(e, index)}
+            className={`btn btn-xs ${activeIndex === index ? "btn-primary" : "btn-neutral"}`}
+          >
+            {index + 1}
+          </a>
         ))}
       </div>
     </div>
