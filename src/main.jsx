@@ -8,6 +8,7 @@ import { useAuthStore } from "./stores/authStore";
 import { useMetaStore } from "./stores/metaStore";
 import axios from "axios";
 import "./index.css";
+import { Analytics } from "@vercel/analytics/react";
 
 axios.defaults.withCredentials = true;
 await useAuthStore.getState().initialize();
@@ -27,5 +28,6 @@ createRoot(document.getElementById("root")).render(
       <RouterProvider router={router} />
       <ReactQueryDevtools />
     </QueryClientProvider>
+    <Analytics />
   </StrictMode>
 );
