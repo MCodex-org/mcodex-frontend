@@ -54,7 +54,7 @@ const PostList = ({ posts, refetch }) => {
                   <ul tabIndex="-1" className="menu dropdown-content bg-base-200 rounded-box z-1 w-52 p-2 shadow-xl">
                     <li><Link to={`/editpost/${post.id}`}>Edit post</Link></li>
                     {post.available_translations?.map(t => (<li key={t}><Link to={`/edittranslation/${t}/${post.id}`}>Edit {t} translation</Link></li>))}
-                    <li><Link className="opacity-30">Add new translation</Link></li>
+                    <li><Link to={`/addtranslation/${post.id}`}>Add new translation</Link></li>
                     <li>
                       <p onClick={()=>document.getElementById(`delete_${post.id}`).showModal()}>Delete post</p>
                     </li>

@@ -14,6 +14,7 @@ import ProfileSettingsPage from "./pages/ProfileSettingsPage.jsx";
 import AuthGuard from "./components/AuthGuard.jsx";
 import OAuthCallbackPage from "./pages/OAuthCallbackPage.jsx";
 import EditPostPage from "./pages/EditPostPage.jsx";
+import AddTranslationPage from "./pages/AddTranslationPage.jsx";
 
 const router = createBrowserRouter([
   {
@@ -25,6 +26,7 @@ const router = createBrowserRouter([
       { path: "posts/:id", element: <PostPage /> },
       { path: "dashboard", element: <AuthGuard><DashboardPage /></AuthGuard> },
       { path: "createpost", element: <AuthGuard><CreatePostPage /></AuthGuard> },
+      { path: "addtranslation/:id", element: <AuthGuard><AddTranslationPage /></AuthGuard> },
       { path: "editpost/:id", element: <AuthGuard><EditPostPage /></AuthGuard> },
       { path: "edittranslation/:lang/:id", element: <AuthGuard><EditPostTranslationPage /></AuthGuard> },
       { path: "u/:username", element: <ProfilePage /> },
