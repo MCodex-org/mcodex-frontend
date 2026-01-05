@@ -28,6 +28,13 @@ const NavBar = () => {
             <label htmlFor="my-drawer-1" aria-label="close sidebar" className="drawer-overlay"></label>
             <ul className="menu bg-base-200 min-h-full w-80 p-4">
               <li><Link to="/posts">Posts</Link></li>
+              <li>
+                <a>Tools</a>
+                <ul className="p-2">
+                  <li><Link to="https://endingcredits.github.io/litematic-viewer/" target="_blank">Litematica Viewer</Link></li>
+                  <li><Link to="https://discord.gg/QgbuGgDhxf" target="_blank">TMC Resources Archive</Link></li>
+                </ul>
+              </li>
               {user ?
                 <div>
                   <li><Link to="/createpost">Upload</Link></li>
@@ -85,7 +92,15 @@ const NavBar = () => {
         <div className="hidden lg:flex">
           <ul className="menu menu-horizontal px-1">
             <li><Link to="/posts">Posts</Link></li>
-
+            <li>
+              <details>
+                <summary>Tools</summary>
+                <ul className="p-2 shadow-2xl w-50 z-1">
+                  <li><Link to="https://endingcredits.github.io/litematic-viewer/" target="_blank">Litematica Viewer</Link></li>
+                  <li><Link to="https://discord.gg/QgbuGgDhxf" target="_blank">TMC Resources Archive</Link></li>
+                </ul>
+              </details>
+            </li>
 
 
           </ul>
