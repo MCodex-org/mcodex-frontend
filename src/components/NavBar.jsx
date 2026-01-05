@@ -19,32 +19,34 @@ const NavBar = () => {
     <nav className="navbar shadow-2xl border-b border-base-content/10 fixed top-0 z-50 bg-base-300">
 
       <div className="navbar-start w-full">
-        <div className="dropdown">
-          <div tabIndex={0} role="button" className="btn btn-ghost lg:hidden">
-            <Menu />
+        <div className="drawer w-fit">
+          <input id="my-drawer-1" type="checkbox" className="drawer-toggle" />
+          <div className="drawer-content">
+            <label htmlFor="my-drawer-1" className="btn btn-ghost btn-square drawer-button lg:hidden"><Menu /></label>
           </div>
-          <ul tabIndex={0} className="menu menu-sm dropdown-content bg-base-100 rounded-box z-1 mt-3 w-52 p-2 shadow-2xl">
-            <li><Link to="/posts">Posts</Link></li>
-
-
-            {user ?
-              <div>
-                <li><Link to="/createpost">Upload</Link></li>
-                <li>
-                  <a>Account</a>
-                  <ul className="p-2">
-                    <li><Link to="/dashboard">Dashboard</Link></li>
-                    <li><Link to="/profilesettings">Settings</Link></li>
-                    <li><Link onClick={handleLogout}>Logout</Link></li>
-                  </ul>
-                </li>
-              </div> :
-              <li><Link to="/login">Log in</Link></li>
-            }
-
-            <li><Link to={import.meta.env.VITE_DISCORD_INVITE_URL}>Discord Server</Link></li>
-          </ul>
+          <div className="drawer-side">
+            <label htmlFor="my-drawer-1" aria-label="close sidebar" className="drawer-overlay"></label>
+            <ul className="menu bg-base-200 min-h-full w-80 p-4">
+              <li><Link to="/posts">Posts</Link></li>
+              {user ?
+                <div>
+                  <li><Link to="/createpost">Upload</Link></li>
+                  <li>
+                    <a>Account</a>
+                    <ul className="p-2">
+                      <li><Link to="/dashboard">Dashboard</Link></li>
+                      <li><Link to="/profilesettings">Settings</Link></li>
+                      <li><Link onClick={handleLogout}>Logout</Link></li>
+                    </ul>
+                  </li>
+                </div> :
+                <li><Link to="/login">Log in</Link></li>
+              }
+              <li><Link to={import.meta.env.VITE_DISCORD_INVITE_URL}>Discord Server</Link></li>
+            </ul>
+          </div>
         </div>
+
         <Link to="/" className="flex items-center mx-3 gap-1.5">
           <SquareLibrary size={36} className="text-primary" strokeWidth={2.25} />
           <div className="flex font-bold text-2xl me-4 sm:me-8">
