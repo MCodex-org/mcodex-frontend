@@ -1,10 +1,12 @@
 import { Check, Pencil, SquarePen } from "lucide-react";
+import { useTranslation } from "react-i18next";
 import { Link } from "react-router-dom";
 
 
 const CDN_URL = import.meta.env.VITE_CDN_URL;
 
 export const ProfileCard = ({ profile, postCount, dashboard = false }) => {
+  const { t } = useTranslation();
 
   return (
     <div className="card bg-base-300 p-8 shadow-2xl rounded-none">
@@ -19,16 +21,16 @@ export const ProfileCard = ({ profile, postCount, dashboard = false }) => {
             {profile.verified && <Check color="dodgerblue" size={24} strokeWidth={2} />}
             {dashboard && <Link to="/profilesettings" className="mx-2" title="Edit profile"><SquarePen stroke="grey" size={20} /></Link>}
           </div>
-          <p className="flex gap-2 items-baseline mb-4">@{profile.username} <span className="label text-sm">{postCount || 0} posts</span></p>
+          <p className="flex gap-2 items-baseline mb-4">@{profile.username} <span className="label text-sm">{postCount || 0} {t("gen.posts")}</span></p>
           <div className="">
             <p className="label text-sm text-wrap whitespace-pre-wrap line-clamp-1">{profile.about}</p>
-            <button className="link link-hover text-sm" onClick={()=>document.getElementById("profile_modal").showModal()}>more</button>
+            <button className="link link-hover text-sm" onClick={()=>document.getElementById("profile_modal").showModal()}>{t("profile.more")}</button>
             <dialog id="profile_modal" className="modal">
               <div className="modal-box">
                 <form method="dialog">
                   <button className="btn btn-sm btn-circle btn-ghost absolute right-2 top-2">✕</button>
                 </form>
-                <h3 className="font-bold text-lg">About me</h3>
+                <h3 className="font-bold text-lg">{t("profile.about_me")}</h3>
                 <p className="whitespace-pre-wrap py-4">{profile.about}</p>
               </div>
             </dialog>

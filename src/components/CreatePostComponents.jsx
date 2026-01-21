@@ -4,10 +4,12 @@ import getCaretCoordinates from "textarea-caret";
 import { EditorContent, useEditor, useEditorState } from "@tiptap/react";
 import StarterKit from "@tiptap/starter-kit";
 import { Bold, Heading1, Heading2, Heading3, Italic, List, ListOrdered, MoveHorizontal, Redo, Strikethrough, Underline, Undo } from "lucide-react";
+import { useTranslation } from "react-i18next";
 
 const BASE_URL = import.meta.env.VITE_SERVER_URL;
 
 export const CategorySelector = ({ postData, setPostData }) => {
+  const { t } = useTranslation();
   const { categories } = useMetaStore();
   const [addedSubs, setAddedSubs] = useState(postData?.subs);
 
@@ -26,14 +28,14 @@ export const CategorySelector = ({ postData, setPostData }) => {
 
   return (
     <div>
-      <button className="btn btn-primary btn-outline" onClick={()=>document.getElementById('category_modal').showModal()}>Select Categories</button>
-      <br /><span className="label mb-2">Required</span>
+      <button className="btn btn-primary btn-outline" onClick={()=>document.getElementById('category_modal').showModal()}>{t("create_post.select_categories")}</button>
+      <br /><span className="label mb-2">{t("gen.required")}</span>
       <dialog id="category_modal" className="modal">
         <div className="modal-box">
           <form method="dialog">
             <button className="btn btn-sm btn-circle btn-ghost absolute right-2 top-2">✕</button>
           </form>
-          <h3 className="font-bold text-lg mb-4">Select Categories</h3>
+          <h3 className="font-bold text-lg mb-4">{t("create_post.select_categories")}</h3>
           {categories?.map((cat) => (
             <form key={cat.id} className="mb-4">
               <p className="text-lg mb-2">{cat.name}</p>
@@ -50,6 +52,7 @@ export const CategorySelector = ({ postData, setPostData }) => {
 };
 
 export const TagSelector = ({ postData, setPostData, required = false, showSelected = false }) => {
+  const { t } = useTranslation();
   const { tags: allTags } = useMetaStore();
   const [tags, setTags] = useState([]);
   const [addedTags, setAddedTags] = useState(postData?.tags);
@@ -95,15 +98,15 @@ export const TagSelector = ({ postData, setPostData, required = false, showSelec
 
   return (
     <div>
-      <button className="btn btn-primary btn-outline" onClick={()=>document.getElementById('tag_modal').showModal()}>Select Tags</button>
+      <button className="btn btn-primary btn-outline" onClick={()=>document.getElementById('tag_modal').showModal()}>{t("create_post.select_tags")}</button>
       <br />
-      {required && <span className="label mb-2">Required</span>}
+      {required && <span className="label mb-2">{t("gen.required")}</span>}
       <dialog id="tag_modal" className="modal">
         <div className="modal-box">
           <form method="dialog">
             <button className="btn btn-sm btn-circle btn-ghost absolute right-2 top-2">✕</button>
           </form>
-          <h3 className="font-bold text-lg mb-4">Select Tags</h3>
+          <h3 className="font-bold text-lg mb-4">{t("create_post.select_tags")}</h3>
           <input
             type="text"
             className="input input-sm mb-2 w-full"
@@ -128,6 +131,7 @@ export const TagSelector = ({ postData, setPostData, required = false, showSelec
 };
 
 export const VersionSelector = ({ postData, setPostData }) => {
+  const { t } = useTranslation();
   const { versions: majorVersions } = useMetaStore();
   const [addedVersions, setAddedVersions] = useState(postData?.versions);
 
@@ -157,18 +161,18 @@ export const VersionSelector = ({ postData, setPostData }) => {
 
   return (
     <div>
-      <button className="btn btn-primary btn-outline" onClick={()=>document.getElementById('version_modal').showModal()}>Select Versions</button>
-      <br /><span className="label mb-2">Required</span>
+      <button className="btn btn-primary btn-outline" onClick={()=>document.getElementById('version_modal').showModal()}>{t("create_post.select_versions")}</button>
+      <br /><span className="label mb-2">{t("gen.required")}</span>
       <dialog id="version_modal" className="modal">
         <div className="modal-box">
           <form method="dialog">
             <button className="btn btn-sm btn-circle btn-ghost absolute right-2 top-2">✕</button>
           </form>
-          <h3 className="font-bold text-lg mb-4">Select Versions</h3>
+          <h3 className="font-bold text-lg mb-4">{t("create_post.select_versions")}</h3>
           {majorVersions?.map((mv) => (
             <form key={mv.id} className="mb-4">
               <div className="flex justify-between w-full"><p className="text-lg mb-2">{mv.name}</p>
-                <div><button type="button" onClick={() => toggleMajorVersion(mv.id)} className="btn btn-primary btn-soft btn-xs mx-2">Select All</button></div>
+                <div><button type="button" onClick={() => toggleMajorVersion(mv.id)} className="btn btn-primary btn-soft btn-xs mx-2">{t("create_post.select_all")}</button></div>
               </div>
               {mv.versions.map((v) => (<input key={v.id} className="btn btn-outline btn-sm m-1" type="checkbox" name="versions" checked={addedVersions.includes(v.id)} onChange={() => toggleVersion(v.id)} aria-label={v.name} />))}
             </form>
@@ -187,6 +191,7 @@ export const VersionSelector = ({ postData, setPostData }) => {
 };
 
 export const MentionInput = ({ postData, setPostData }) => {
+  const { t } = useTranslation();
   const [value, setValue] = useState(postData.designers || "");
   const [suggestions, setSuggestions] = useState([]);
   const [showDropdown, setShowDropdown] = useState(false);
@@ -290,7 +295,7 @@ export const MentionInput = ({ postData, setPostData }) => {
     <div className="relative">
       <input
         className="input validator w-full border p-2 rounded"
-        placeholder="Type @ to mention someone"
+        placeholder={t("create_post.@_to_mention")}
         value={value}
         onChange={handleChange}
         onKeyDown={handleKeyDown}
@@ -319,6 +324,7 @@ export const MentionInput = ({ postData, setPostData }) => {
 };
 
 export const VideoInput = ({ postData, setPostData }) => {
+  const { t } = useTranslation();
   const [videos, setVideos] = useState(postData.video_urls || [""]);
 
   const handleChange = (i, value) => {
@@ -345,14 +351,14 @@ export const VideoInput = ({ postData, setPostData }) => {
           <input
             type="url"
             value={url}
-            placeholder="Youtube/Bilibili Video URL"
+            placeholder={t("create_post.yt_billy_url")}
             onChange={(e) => handleChange(i, e.target.value)}
             className="input w-full"
           />
           {videos.length > 1 && <button type="button" onClick={() => removeField(i)} className="btn btn-error btn-sm">x</button>}
         </div>
       ))}
-      {videos.length < 5 && (<button type="button" onClick={addField} className="btn btn-primary btn-sm">+ Add another</button>)}
+      {videos.length < 5 && (<button type="button" onClick={addField} className="btn btn-primary btn-sm">+ {t("create_post.add_another")}</button>)}
     </div>
   );
 };

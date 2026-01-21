@@ -4,6 +4,7 @@ import { Link, useNavigate } from "react-router-dom";
 import { useMetaStore } from "../stores/metaStore";
 import Avatar from "./Avatar";
 import { useFetchDownloads } from "../hooks/usePosts";
+import { useTranslation } from "react-i18next";
 
 const CDN_URL = import.meta.env.VITE_CDN_URL;
 
@@ -100,7 +101,17 @@ export const Carousel = ({ image_urls = [], video_urls = [] }) => {
 };
 
 export const PostCard = ({ post }) => {
+  const { t } = useTranslation();
+  const { tags: metaTags } = useMetaStore();
   const navigate = useNavigate();
+
+  const findTag = (tagId) => {
+    for (const tagCat of metaTags) {
+      const tag = tagCat.tags.find(t => t.id === tagId);
+      if (tag) return tag;
+    }
+    return;
+  };
 
   return (
     <div
@@ -116,13 +127,14 @@ export const PostCard = ({ post }) => {
           </div>
         </div>
         <div className="absolute bottom-2 left-2 mx-1 flex items-center">
-        {post.recommended && <div className="badge badge-info badge-xs">RECOMMENDED</div>}
+        {post.recommended && <div className="badge badge-info badge-xs">{t("gen.recommended")}</div>}
         </div>
       </figure>
-      <div className='card-body'>
+      <div className="card-body">
         <div className="line-clamp-1">
-          {post.tags?.map(tag => {
-            return <div key={tag.id} className="badge badge-sm badge-primary mr-1">{tag.name}</div>
+          {post.tags?.map(t => {
+            const tag = findTag(t);
+            return <div key={tag} className="badge badge-sm badge-primary mr-1">{tag?.name}</div>
           })}
         </div>
         <div className="flex flex-col">
@@ -143,10 +155,10 @@ export const PostCard = ({ post }) => {
                 textOverflow: "ellipsis",
                 maxWidth: "175px"
               }}>
-              Posted by: <strong>{post.owner.display_name}</strong>
+              {t("post.posted_by")}: <strong>{post.owner.display_name}</strong>
             </p>
             <div className="tooltip before:whitespace-pre-wrap" data-tip={post.output}>
-              <p className="text-secondary text-sm">{post.total_rate ? (post.total_rate + "/hr") : "Not applicable"}</p>
+              <p className="text-secondary text-sm">{post.total_rate ? (post.total_rate + "/" + t("post.hr")) : t("post.not_applicable")}</p>
             </div>
           </div>
           <div className="flex">
@@ -187,16 +199,19 @@ export const PostGrid = ({ posts, isPending }) => {
 };
 
 export const Pagination = ({ filterData, setFilterData, totalPageCount }) => {
+  const { t } = useTranslation();
+
   return (
-<div className="join flex justify-center mb-32" hidden={!totalPageCount}>
-  <button className="join-item btn" disabled={filterData.page < 2} onClick={() => setFilterData((prev) => ({ ...prev, page: filterData.page - 1 }))}>«</button>
-  <button className="join-item btn">Page {filterData.page} / {totalPageCount}</button>
-  <button className="join-item btn" disabled={filterData.page >= totalPageCount} onClick={() => setFilterData((prev) => ({ ...prev, page: filterData.page + 1 }))}>»</button>
-</div>
+    <div className="join flex justify-center mb-32" hidden={!totalPageCount}>
+      <button className="join-item btn" disabled={filterData.page < 2} onClick={() => setFilterData((prev) => ({ ...prev, page: filterData.page - 1 }))}>«</button>
+      <button className="join-item btn">{t("gen.page")} {filterData.page} / {totalPageCount}</button>
+      <button className="join-item btn" disabled={filterData.page >= totalPageCount} onClick={() => setFilterData((prev) => ({ ...prev, page: filterData.page + 1 }))}>»</button>
+    </div>
   );
 };
 
 export const Filters = ({ realFilterData, setRealFilterData }) => {
+  const { t } = useTranslation();
   const [expanded, setExpanded] = useState(false);
   const [filterData, setFilterData] = useState(realFilterData);
   const { categories, tags, versions } = useMetaStore();
@@ -285,7 +300,8 @@ export const Filters = ({ realFilterData, setRealFilterData }) => {
       subcategory: filterData.subcategory,
       tags: filterData.tags,
       version: filterData.version,
-      page: 1
+      page: 1,
+      otherLang: filterData.otherLang
     }));
   };
 
@@ -301,7 +317,7 @@ export const Filters = ({ realFilterData, setRealFilterData }) => {
         onClick={() => setExpanded(!expanded)}
       >
         <ListFilter size={24} strokeWidth={2} />
-        {expanded ? <div>Close filters</div> : <div>Expand filters</div>}
+        {expanded ? <div>{t("filter.close")}</div> : <div>{t("filter.expand")}</div>}
       </div>
 
       <div className="justify-center p-4 gap-4" hidden={!expanded}>
@@ -313,21 +329,26 @@ export const Filters = ({ realFilterData, setRealFilterData }) => {
                 className="checkbox mx-2 my-1" 
                 checked={filterData.recommended || false}
                 onChange={(e) => setFilterData((prev) => ({ ...prev, recommended: e.target.checked }))}
-              /> <div>Show only recommended</div>
+              /> <div>{t("filter.only_recommended")}</div>
+            </div>
+            <div className="flex items-center">
+              <input
+                type="checkbox"
+                className="checkbox mx-2 my-1"
+                checked={filterData.otherLang || false}
+                onChange={(e) => {
+                  setFilterData((prev) => ({ ...prev, otherLang: e.target.checked }))
+                  localStorage.setItem("otherLang", e.target.checked);
+                  console.log("OTHER LANG:", localStorage.getItem("otherLang"));
+                }}
+              /> <div>{t("filter.other_lang")}</div>
             </div>
             <div className="flex items-center">
               <input
                 type="checkbox"
                 className="checkbox mx-2 my-1"
                 disabled
-              /> <div>Show posts in other languages</div>
-            </div>
-            <div className="flex items-center">
-              <input
-                type="checkbox"
-                className="checkbox mx-2 my-1"
-                disabled
-              /> <div>Show only posts with tutorials</div>
+              /> <div>{t("filter.only_tutorial")}</div>
             </div>
             <div className="flex items-center">
               <input
@@ -335,7 +356,7 @@ export const Filters = ({ realFilterData, setRealFilterData }) => {
                 className="checkbox mx-2 my-1"
                 checked={filterData.schems || false}
                 onChange={(e) => setFilterData((prev) => ({ ...prev, schems: e.target.checked }))}
-              /> <div>Show only posts with schematics</div>
+              /> <div>{t("filter.only_schem")}</div>
             </div>
             <div className="flex items-center">
               <input
@@ -343,7 +364,7 @@ export const Filters = ({ realFilterData, setRealFilterData }) => {
                 className="checkbox mx-2 my-1"
                 checked={filterData.wdl || false}
                 onChange={(e) => setFilterData((prev) => ({ ...prev, wdl: e.target.checked }))}
-              /> <div>Show only posts with a world download</div>
+              /> <div>{t("filter.only_wdl")}</div>
             </div>
           </div>
 
@@ -353,7 +374,7 @@ export const Filters = ({ realFilterData, setRealFilterData }) => {
               className="select mb-2"
               onChange={(e) => setFilterData((prev) => ({ ...prev, category: Number(e.target.value), subcategory: "" }))}
             >
-              <option value="" disabled={true}>Filter by category</option>
+              <option value="" disabled={true}>{t("filter.by_category")}</option>
               {categories?.map((cat) => (<option key={cat.id} value={cat.id}>{cat.name}</option>))}
             </select>
 
@@ -363,7 +384,7 @@ export const Filters = ({ realFilterData, setRealFilterData }) => {
               onChange={(e) => setFilterData((prev) => ({ ...prev, subcategory: e.target.value }))}
               disabled={!filterData.category}
             >
-              <option value="" disabled={true}>Filter by sub-category</option>
+              <option value="" disabled={true}>{t("filter.by_subcategory")}</option>
               {categories
                 ?.find((cat) => cat.id === Number(filterData.category))
                 ?.subcategories?.map((sub) => (
@@ -374,8 +395,8 @@ export const Filters = ({ realFilterData, setRealFilterData }) => {
             </select>
 
             <div className="flex dropdown mb-2 w-full justify-center">
-              <div tabIndex={0} role="button" className="select cursor-default">Filter by tags</div>
-              <ul tabIndex="-1" className="dropdown-content menu bg-base-100 border border-base-300 rounded-box z-1 p-2 w-80 shadow-2xl">
+              <div tabIndex={0} role="button" className="select cursor-default">{t("filter.by_tags")}</div>
+              <ul tabIndex="-1" className="dropdown-content menu bg-base-100 border border-base-300 rounded-box z-1 p-2 w-80 shadow-2xl mt-10">
                 <input type="text" className="input input-sm mb-2" placeholder="search" onChange={handleSearch} />
                 <div className="overflow-y-auto max-h-96">
                   {matchedTags?.map((tc) =>
@@ -416,7 +437,7 @@ export const Filters = ({ realFilterData, setRealFilterData }) => {
               className="select"
               onChange={(e) => setFilterData((prev) => ({ ...prev, version: e.target.value }))}
             >
-              <option value="" disabled={true}>Filter by game version</option>
+              <option value="" disabled={true}>{t("filter.by_version")}</option>
               {versions?.map((vc) => 
                 vc.versions?.map((v) => (<option key={v.id} value={v.id}>{v.name}</option>))
               )}
@@ -425,8 +446,8 @@ export const Filters = ({ realFilterData, setRealFilterData }) => {
         </div>
         
         <div className="flex flex-row justify-center mt-8 gap-4">
-          <button className="btn btn-primary" onClick={handleApplyFilters}>Apply filters</button>
-          <button className="btn btn-ghost link" onClick={handleResetFilters}>Reset filters</button>
+          <button className="btn btn-primary" onClick={handleApplyFilters}>{t("filter.apply")}</button>
+          <button className="btn btn-ghost link" onClick={handleResetFilters}>{t("filter.reset")}</button>
         </div>
       </div>
 
@@ -436,6 +457,7 @@ export const Filters = ({ realFilterData, setRealFilterData }) => {
 };
 
 export const CurrentFilters = ({ filterData, setFilterData, realFilterData, setRealFilterData }) => {
+  const { t } = useTranslation();
   const { categories, tags, versions } = useMetaStore();
 
   const handleAddTag = (tagId) => {
@@ -505,7 +527,7 @@ export const CurrentFilters = ({ filterData, setFilterData, realFilterData, setR
 
   return (
     <div className="flex flex-wrap gap-2 px-4 pb-4 my-2 items-center">
-      <div className="font-bold mx-2">Current filters:</div>
+      <div className="font-bold mx-2">{t("filter.current")}:</div>
       {(!realFilterData.recommended
           && !realFilterData.schems
           && !realFilterData.wdl
@@ -514,12 +536,12 @@ export const CurrentFilters = ({ filterData, setFilterData, realFilterData, setR
           && realFilterData.tags.with.length === 0
           && realFilterData.tags.without.length === 0
           && !realFilterData.version) && (
-        <div className="opacity-60">None</div>
+        <div className="opacity-60">{t("filter.none")}</div>
       )}
 
       {realFilterData.recommended && (
         <div className="badge badge-info">
-          Recommended
+          {t("gen.recommended")}
           <button
             className="btn btn-ghost btn-xs"
             onClick={() => {
@@ -534,7 +556,7 @@ export const CurrentFilters = ({ filterData, setFilterData, realFilterData, setR
 
       {realFilterData.schems && (
         <div className="badge badge-info badge-outline">
-          Schematics
+          {t("gen.schematics")}
           <button
             className="btn btn-ghost btn-xs"
             onClick={() => {
@@ -549,7 +571,7 @@ export const CurrentFilters = ({ filterData, setFilterData, realFilterData, setR
 
       {realFilterData.wdl && (
         <div className="badge badge-info badge-outline">
-          World Download
+          {t("gen.world_download")}
           <button
             className="btn btn-ghost btn-xs"
             onClick={() => {
@@ -564,7 +586,7 @@ export const CurrentFilters = ({ filterData, setFilterData, realFilterData, setR
 
       {realFilterData.category && (
         <div className="badge badge-primary gap-2">
-          {categories?.find(c => c.id === Number(realFilterData.category))?.name || "Category"}
+          {categories?.find(c => c.id === Number(realFilterData.category))?.name || t("gen.category")}
           <button
             className="btn btn-ghost btn-xs"
             onClick={() => {
@@ -582,7 +604,7 @@ export const CurrentFilters = ({ filterData, setFilterData, realFilterData, setR
           {categories
             ?.flatMap(c => c.subcategories || [])
             .find(s => s.id === Number(realFilterData.subcategory))
-            ?.name || "Subcategory"}
+            ?.name || t("gen.subcategory")}
           <button
             className="btn btn-ghost btn-xs"
             onClick={() => {
@@ -645,7 +667,7 @@ export const CurrentFilters = ({ filterData, setFilterData, realFilterData, setR
           className="btn btn-xs btn-ghost"
           onClick={handleResetFilters}
         >
-          Clear all
+          {t("filter.clear_all")}
         </button>
       )}
     </div>
@@ -653,6 +675,7 @@ export const CurrentFilters = ({ filterData, setFilterData, realFilterData, setR
 };
 
 export const SearchBar = ({ filterData, setFilterData }) => {
+  const { t } = useTranslation();
   const [search, setSearch] = useState(filterData.search);
   const [by, setBy] = useState(filterData.by);
 
@@ -660,15 +683,15 @@ export const SearchBar = ({ filterData, setFilterData }) => {
     <div className="flex mx-4 gap-2">
       <div className="w-24">
         <select defaultValue={by} className="select" onChange={(e) => {setBy(e.target.value)}}>
-          <option value="posts">Title</option>
-          <option value="output">Output</option>
+          <option value="posts">{t("gen.title")}</option>
+          <option value="output">{t("gen.output")}</option>
         </select>
       </div>
 
       <input
         type="text"
         defaultValue={search}
-        placeholder="Search"
+        placeholder={t("gen.search")}
         className="input w-40 lg:w-64"
         onChange={(e) => setSearch(e.target.value.trim())}
         onKeyDown={(e) => {
@@ -685,74 +708,125 @@ export const SearchBar = ({ filterData, setFilterData }) => {
           if (search) setFilterData((prev) => ({ ...prev, search: search, by: by, page: 1 }));
           else setFilterData((prev) => ({ ...prev, search: "", by: "", page: 1 }));
         }}
-      >Search</button>
+      >{t("gen.search")}</button>
     </div>
   );
 };
 
 export const Sort = ({ filterData, setFilterData }) => {
+  const { t } = useTranslation();
+
   return (
     <div className="flex items-center mx-4 my-2 gap-2 md:w-full md:justify-end md:my-0">
-      Sort by:
+      {t("filter.sort_by")}:
       <select
         value={filterData.sort || "latest"}
         className="select w-fit"
         onChange={(e) => setFilterData((prev) => ({...prev, sort: e.target.value}))}
       >
-        <option value="latest">Latest</option>
-        <option value="oldest">Oldest</option>
-        <option value="total_votes">Total Votes</option>
-        <option value="rates_desc">Total Rates(High to Low)</option>
-        <option value="rates_asc">Total Rates(Low to High)</option>
+        <option value="latest">{t("filter.latest")}</option>
+        <option value="oldest">{t("filter.oldest")}</option>
+        <option value="total_votes">{t("filter.total_votes")}</option>
+        <option value="rates_desc">{t("filter.total_rates")}({t("filter.htl")})</option>
+        <option value="rates_asc">{t("filter.total_rates")}({t("filter.lth")})</option>
       </select>
     </div>
   );
 };
 
 export const Categories = ({ categories, subcategories }) => {
+  const { t } = useTranslation();
+  const { categories: metaCats } = useMetaStore();
+
+  const findCategory = (id) => metaCats.find(c => c.id === id);
+  const findSubcategory = (catId, subId) => findCategory(catId)?.subcategories.find(sc => sc.id === subId);
+  
   return (
     <div className="bg-base-200 rounded-box shadow-md mb-4 md:w-3xs lg:w-xs 2xl:w-md">
-      <div className="p-4 pb-2 text-xs opacity-60 tracking-wide">Categories/Subcategories</div>
+      <div className="p-4 pb-2 text-xs opacity-60 tracking-wide">{t("gen.categories")}/{t("gen.subcategories")}</div>
       <div className="p-4 pt-2">
-        {categories?.map((c, index) => (
-          <div key={index} className="mb-2">
-            <Link 
-              className="badge badge-sm badge-primary me-1"
-              to={`/posts?category=${c.id}`}
-            >
-              {c.name}
-            </Link>
-            {subcategories?.map((sc, idx) => (
-            sc.category_id === c.id && <Link key={idx} className="badge badge-sm badge-secondary me-0.5" to={`/posts?subcategory=${sc.id}`}>{sc.name}</Link>
-            ))}
-          </div>
-        ))}
+        {categories?.map((catId, index) => {
+          const cat = findCategory(catId);
+          if (!cat) return;
+
+          return (
+            <div key={index} className="mb-2">
+              <Link 
+                className="badge badge-sm badge-primary me-1"
+                to={`/posts?category=${cat.id}`}
+              >
+                {cat.name}
+              </Link>
+
+              {subcategories?.map((subId, idx) => {
+                const subcat = findSubcategory(cat.id, subId);
+                if (!subcat) return;
+                
+                return (
+                  <Link
+                    key={idx}
+                    className="badge badge-sm badge-secondary me-0.5"
+                    to={`/posts?subcategory=${subcat.id}`}
+                  >
+                    {subcat.name}
+                  </Link>
+                );
+              })}
+            </div>
+          );
+        })}
       </div>
     </div>
   );
 };
 
 export const Tags = ({ tags }) => {
+  const { t } = useTranslation();
+  const { tags: metaTags } = useMetaStore();
+
+  const findTag = (tagId) => {
+    for (const tagCat of metaTags) {
+      const tag = tagCat.tags.find(t => t.id === tagId);
+      if (tag) return tag;
+    }
+    return;
+  };
 
   return (
     <div className="bg-base-200 rounded-box shadow-md mb-4 md:w-3xs lg:w-xs 2xl:w-md">
-      <div className="p-4 pb-2 text-xs opacity-60 tracking-wide">Tags</div>
+      <div className="p-4 pb-2 text-xs opacity-60 tracking-wide">{t("gen.tags")}</div>
       <div className="p-4 pt-2">
-        {tags?.map((t, index) => (
+        {tags?.map((t, index) => {
+          const tag = findTag(t);
+          console.log(tag);
+
+          return (
             <Link
               key={index}
               className="badge badge-primary me-1 mb-2"
-              to={`/posts?with=${t.id}`}
+              to={`/posts?with=${tag.id}`}
             >
-              {t.name}
+              {tag.name}
             </Link>
-        ))}
+          );
+        })}
       </div>
     </div>
   );
 };
 
 export const Versions = ({ versions }) => {
+  const { t } = useTranslation();
+  const { versions: metaVersions } = useMetaStore();
+
+  const findVersion = (versionId) => {
+    for (const majorVersion of metaVersions) {
+      const version = majorVersion.versions.find(v => v.id === versionId);
+      if (version) return version;
+    }
+    return;
+  };
+
   const buildRanges = (versions) => {
     const sorted = [...versions].sort((a, b) => a.id - b.id);
     
@@ -780,7 +854,7 @@ export const Versions = ({ versions }) => {
 
   return (
     <div className="bg-base-200 rounded-box shadow-md mb-4 md:w-3xs lg:w-xs 2xl:w-md">
-      <div className="p-4 pb-2 text-xs opacity-60 tracking-wide">Versions</div>
+      <div className="p-4 pb-2 text-xs opacity-60 tracking-wide">{t("gen.versions")}</div>
       <div className="p-4 pt-2">
         {ranges?.map((range, index) => (
             <div
@@ -796,10 +870,12 @@ export const Versions = ({ versions }) => {
 };
 
 export const Output = ({ output }) => {
+  const { t } = useTranslation();
+
   return (
     <div>
       <ul className="list bg-base-200 rounded-box shadow-md mb-4 md:w-3xs lg:w-xs 2xl:w-md">
-        <li className="p-4 pb-0 text-xs opacity-60 tracking-wide">Output</li>
+        <li className="p-4 pb-0 text-xs opacity-60 tracking-wide">{t("gen.output")}</li>
         <li className="list-row whitespace-pre-wrap">
           {output}
         </li>
@@ -809,11 +885,13 @@ export const Output = ({ output }) => {
 };
 
 export const Designers = ({ ownerId, designers }) => {
+  const { t } = useTranslation();
+
   return (
     <div>
       <ul className="list bg-base-200 rounded-box shadow-md mb-4 md:w-3xs lg:w-xs 2xl:w-md">
   
-        <li className="p-4 pb-2 text-xs opacity-60 tracking-wide">Designers</li>
+        <li className="p-4 pb-2 text-xs opacity-60 tracking-wide">{t("post.designers")}</li>
 
         {designers?.map((designer, index) => (
           <Link key={index} to={designer.username ? `/u/${designer.username}` : ""}>
@@ -825,7 +903,7 @@ export const Designers = ({ ownerId, designers }) => {
                   <div className="flex gap-1 items-center">
                     {designer.display_name}
                     {designer.verified && <Check color="dodgerblue" absoluteStrokeWidth />}
-                    {designer.user_id === ownerId && (<div className="badge badge-sm badge-primary mx-2">OP</div>)}
+                    {designer.user_id === ownerId && (<div className="badge badge-sm badge-primary mx-2">{t("post.op")}</div>)}
                   </div>
                 )}
                 {designer.username && (<div className="text-xs font-semibold opacity-60">@{designer.username}</div>)}
@@ -840,10 +918,12 @@ export const Designers = ({ ownerId, designers }) => {
 };
 
 export const Credits = ({ credits }) => {
+  const { t } = useTranslation();
+
   return (
     <div>
       <ul className="list bg-base-200 rounded-box shadow-md mb-4 md:w-3xs lg:w-xs 2xl:w-md">
-        <li className="p-4 pb-0 text-xs opacity-60 tracking-wide">Credits</li>
+        <li className="p-4 pb-0 text-xs opacity-60 tracking-wide">{t("gen.credits")}</li>
         <li className="list-row whitespace-pre-wrap">
           {credits}
         </li>
@@ -853,10 +933,12 @@ export const Credits = ({ credits }) => {
 };
 
 export const Schems = ({ schems }) => {
+  const { t } = useTranslation();
+
   return (
     <div>
       <ul className="list bg-base-200 rounded-box shadow-md mb-4 w-full">
-        <li className="p-4 pb-2 text-xs opacity-60 tracking-wide">Schematics</li>
+        <li className="p-4 pb-2 text-xs opacity-60 tracking-wide">{t("gen.schematics")}</li>
 
         {schems?.map((schem, index) => (
           <a key={index} href={CDN_URL + "/" + schem} download={schem.split("-").slice(1).join("-")} className="list-row items-center font-bold">
@@ -870,10 +952,12 @@ export const Schems = ({ schems }) => {
 };
 
 export const Wdl = ({ wdl }) => {
+  const { t } = useTranslation();
+
   return (
     <div>
       <ul className="list bg-base-200 rounded-box shadow-md mb-4 w-full">
-        <li className="p-4 pb-2 text-xs opacity-60 tracking-wide">World Download</li>
+        <li className="p-4 pb-2 text-xs opacity-60 tracking-wide">{t("gen.world_download")}</li>
           <a href={CDN_URL + "/" + wdl} download={wdl?.split("-").slice(1).join("-")} className="list-row items-center font-bold">
             <div className="btn btn-primary btn-square"><Download /></div>
             {wdl?.split("-").slice(1).join("-")}
@@ -898,6 +982,7 @@ export const Vote = ({ initialCount, initialVote, onVote }) => {
 };
 
 export const DownloadsModal = ({ postId }) => {
+  const { t } = useTranslation();
   const { data: downloads, isFetching, refetch } = useFetchDownloads(postId);
 
   const handleShowDownloads = async (e) => {
@@ -923,8 +1008,8 @@ export const DownloadsModal = ({ postId }) => {
             {/* if there is a button in form, it will close the modal */}
             <button className="btn btn-sm btn-circle btn-ghost absolute right-2 top-2">✕</button>
           </form>
-          <h3 className="font-bold text-lg mb-4">Downloads</h3>
-          {!downloads?.schem_urls && !downloads?.wdl_urls && <div>No downloads</div>}
+          <h3 className="font-bold text-lg mb-4">{t("post.downloads")}</h3>
+          {!downloads?.schem_urls && !downloads?.wdl_urls && <div>{t("post.no_downloads")}</div>}
           {downloads?.schem_urls && <Schems schems={downloads.schem_urls} />}
           {downloads?.wdl_urls && <Wdl wdl={downloads.wdl_urls[0]} />}
         </div>

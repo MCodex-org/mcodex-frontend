@@ -1,14 +1,15 @@
+import { useTranslation } from "react-i18next";
 import { Link } from "react-router-dom";
 
 const HomePage = () => {
+  const { t } = useTranslation();
+
   return (
     <div className="h-screen flex flex-col items-center justify-center text-center px-4" style={{ height: 'calc(100vh - 64px)' }}>
-      <h1 className="flex justify-center text-3xl font-bold">
-        Share & Discover Builds
-      </h1>
-      <p className="flex justify-center text-xl mt-4">Discover and share Minecraft schematics in one simple, <br /> organized archive built for the community.</p>
+      <h1 className="flex justify-center text-3xl font-bold">{t("home.heading")}</h1>
+      <p className="flex justify-center text-xl max-w-lg mt-4">{t("home.sub_heading")}</p>
       <div className="flex justify-center mt-8">
-        <Link to="/posts" className="btn btn-primary">Explore posts</Link>
+        <Link to="/posts" className="btn btn-primary">{t("home.explore_posts")}</Link>
       </div>
     </div>
   );

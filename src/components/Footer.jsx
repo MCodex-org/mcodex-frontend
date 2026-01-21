@@ -1,12 +1,15 @@
 import { SquareLibrary } from "lucide-react";
+import { useTranslation } from "react-i18next";
 import { Link } from "react-router-dom";
 
 const Footer = () => {
+  const { t } = useTranslation();
+
   return (
     <footer className="footer sm:footer-horizontal bg-base-300 text-base-content items-center p-4">
       <aside className="grid-flow-col items-center">
         <SquareLibrary size={36} />
-        <p>Copyright © {new Date().getFullYear()} - All right reserved</p>
+        <p>{t("footer.copyright")} © {new Date().getFullYear()} - {t("footer.all_rights_reserved")}</p>
       </aside>
       <nav className="grid-flow-col gap-4 md:place-self-center md:justify-self-end hidden md:block">
         <Link to={import.meta.env.VITE_DISCORD_INVITE_URL}>

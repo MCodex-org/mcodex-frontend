@@ -3,7 +3,7 @@ import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 
 const BASE_URL = import.meta.env.VITE_SERVER_URL;
 
-const fetchPosts = async (filterData) => {
+const fetchPosts = async (filterData, lang) => {
   try {
     const response = await axios.get(`${BASE_URL}/api/posts`, {
       params: {
@@ -19,7 +19,9 @@ const fetchPosts = async (filterData) => {
         without_tags: filterData.tags.without.join(","),
         version: filterData.version,
         sort: filterData.sort,
-        page: filterData.page
+        page: filterData.page,
+        lang: lang,
+        otherLang: filterData.otherLang
       }
     });
 
@@ -37,9 +39,13 @@ const fetchPosts = async (filterData) => {
   }
 };
 
-const fetchPost = async (postId) => {
+const fetchPost = async (postId, lang) => {
   try {
-    const response = await axios.get(`${BASE_URL}/api/posts/${postId}`);
+    const response = await axios.get(`${BASE_URL}/api/posts/${postId}`, {
+      params: {
+        lang: lang
+      }
+    });
 
     if (!response.data.success) {
       throw new Error(response.data.message || "Failed to fetch post");
@@ -73,9 +79,13 @@ const fetchDownloads = async (postId) => {
   }
 };
 
-const fetchDashboard = async () => {
+const fetchDashboard = async (lang) => {
   try {
-    const response = await axios.get(`${BASE_URL}/api/posts/dashboard`);
+    const response = await axios.get(`${BASE_URL}/api/posts/dashboard`, {
+      params: {
+        lang: lang
+      }
+    });
 
     if (!response.data.success) {
       throw new Error(response.data.message || "Failed to fetch posts");
@@ -166,18 +176,18 @@ const updatePostTranslation = async ({ postId, lang, translationData }) => {
 
 
 
-export const useFetchPosts = (filterData) => {
+export const useFetchPosts = (filterData, lang) => {
   return useQuery({
-    queryKey: ["posts", filterData],
-    queryFn: () => fetchPosts(filterData),
+    queryKey: ["posts", filterData, lang],
+    queryFn: () => fetchPosts(filterData, lang),
     keepPreviousData: true
   });
 };
 
-export const useFetchPost = (postId) => {
+export const useFetchPost = (postId, lang) => {
   return useQuery({
-    queryKey: ["post", postId],
-    queryFn: () => fetchPost(postId),
+    queryKey: ["post", postId, lang],
+    queryFn: () => fetchPost(postId, lang),
     enabled: !!postId
   });
 };
@@ -190,10 +200,10 @@ export const useFetchDownloads = (postId) => {
   });
 };
 
-export const useFetchDashboard = () => {
+export const useFetchDashboard = (lang) => {
   return useQuery({
-    queryKey: ["dashboard"],
-    queryFn: () => fetchDashboard()
+    queryKey: ["dashboard", lang],
+    queryFn: () => fetchDashboard(lang)
   });
 };
 

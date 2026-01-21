@@ -5,8 +5,10 @@ import { useCreatePostTranslation } from "../hooks/usePosts";
 import { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { CircleX } from "lucide-react";
+import { useTranslation } from "react-i18next";
 
 const CreatePostTranslation = ({ postId }) => {
+  const { t } = useTranslation();
   const [translationData, setTranslationData] = useState({ description_html: "", description_json: {} });
   const [err, setErr] = useState(null);
   const navigate = useNavigate();
@@ -15,7 +17,7 @@ const CreatePostTranslation = ({ postId }) => {
 
   useEffect(() => {
     if (isSuccess) {
-      toast.success("Post completed successfully");
+      toast.success(t("create_post.translation_success"));
       setErr(null);
       navigate("/");
     }
@@ -23,7 +25,7 @@ const CreatePostTranslation = ({ postId }) => {
 
   useEffect(() => {
     if (isError) {
-      const errorMsg = error?.response?.data?.message || error?.message || "Failed to complete post";
+      const errorMsg = error?.response?.data?.message || error?.message || t("create_post.translation_failed");
       setErr(errorMsg);
       toast.error(errorMsg);
     }
@@ -31,15 +33,15 @@ const CreatePostTranslation = ({ postId }) => {
 
   const validateTranslationData = () => {
     if (!translationData.lang) {
-      throw new Error("Please select language");
+      throw new Error(t("create_post.language_required"));
     }
     
     if (!translationData.title || !translationData.title.trim()) {
-      throw new Error("Please enter title");
+      throw new Error(t("create_post.title_required"));
     }
     
     if (!translationData.description_html || !translationData.description_json) {
-      throw new Error("Please enter description");
+      throw new Error(t("create_post.desc_required"));
     }
     
     return;
@@ -68,7 +70,7 @@ const CreatePostTranslation = ({ postId }) => {
       console.log(translationData);
       mutate({postId, translationData});
     } catch (submitErr) {
-      const errorMsg = submitErr?.message || "An unexpected error occurred";
+      const errorMsg = submitErr?.message || t("create_post.unexpected_error");
       setErr(errorMsg);
       toast.error(errorMsg);
     }
@@ -84,16 +86,18 @@ const CreatePostTranslation = ({ postId }) => {
             onChange={(e) => handleDataChange("lang", e.target.value)}
             required
           >
-            <option disabled value="">Select your language</option>
+            <option disabled value="">{t("create_post.select_language")}</option>
             <option value="en">English</option>
-            <option value="ru" hidden>Russian</option>
+            <option value="ru" hidden>Русский</option>
+            <option value="zh">简体中文</option>
+            <option value="es" hidden>Español</option>
           </select>
-          <p className="validator-hint">Required</p>
+          <p className="validator-hint">{t("gen.required")}</p>
         </div>
       </div>
       
       <fieldset className="fieldset">
-        <legend className="fieldset-legend">Post ID</legend>
+        <legend className="fieldset-legend">{t("gen.post_id")}</legend>
         <input
           type="text"
           className="input validator w-auto"
@@ -101,41 +105,41 @@ const CreatePostTranslation = ({ postId }) => {
           disabled
         />
 
-        <legend className="fieldset-legend">Post Title</legend>
+        <legend className="fieldset-legend">{t("gen.post_title")}</legend>
         <input
           type="text"
           className="input validator w-auto"
-          placeholder="Title"
+          placeholder={t("gen.post_title")}
           maxLength={64}
           onChange={(e) => handleDataChange("title", e.target.value)}
           required
         />
-        <p className="label">Required</p>
+        <p className="label">{t("gen.required")}</p>
 
-        <legend className="fieldset-legend">Credits</legend>
+        <legend className="fieldset-legend">{t("gen.credits")}</legend>
         <textarea
           type="text"
           className="textarea validator w-auto"
-          placeholder="Credits"
+          placeholder={t("gen.credits")}
           maxLength={512}
           onChange={(e) => handleDataChange("credits", e.target.value)}
         />
 
-        <legend className="fieldset-legend">Individual Output Rates</legend>
+        <legend className="fieldset-legend">{t("create_post.individual_output_rates")}</legend>
         <textarea
           type="text"
           className="textarea validator w-auto"
-          placeholder="Individual Output Rates"
+          placeholder={t("create_post.individual_output_rates")}
           maxLength={512}
           onChange={(e) => handleDataChange("output", e.target.value)}
         />
 
-        <legend className="fieldset-legend">Description</legend>
+        <legend className="fieldset-legend">{t("gen.description")}</legend>
         <RichTextEditor
           value={translationData?.description_json?.type ? translationData.description_json : ""}
           onChange={setTranslationData}
         />
-        <p className="label">Required</p>
+        <p className="label">{t("gen.required")}</p>
 
         {err && (
           <div className="text-error flex justify-center items-center mt-4 gap-2"><CircleX />{err}</div>
@@ -143,7 +147,7 @@ const CreatePostTranslation = ({ postId }) => {
 
         <div className="flex justify-center mt-4">
           <button onClick={handleSubmit} disabled={isPending} className="btn btn-primary w-max">
-            {(isPending && <span className="loading loading-spinner" />) || <>Submit</>}
+            {(isPending && <span className="loading loading-spinner" />) || <>{t("create_post.submit")}</>}
           </button>
         </div>
 

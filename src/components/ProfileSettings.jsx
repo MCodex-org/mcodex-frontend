@@ -2,11 +2,13 @@ import { useEffect, useState } from "react";
 import { useAuthStore } from "../stores/authStore";
 import { CircleX } from "lucide-react";
 import toast from "react-hot-toast";
+import { useTranslation } from "react-i18next";
 
 const CDN_URL = import.meta.env.VITE_CDN_URL;
 
 
 const ProfileSettings = () => {
+  const { t } = useTranslation();
   const { profile, updateProfile, deleteAvatar } = useAuthStore();
   const placeholder = "Portrait_Placeholder.png";
   const [changedVariables, setChangedVariables] = useState({
@@ -72,7 +74,7 @@ const ProfileSettings = () => {
       }
       setErr(null);
     } catch (fileErr) {
-      const msg = `Error updating avatar`;
+      const msg = t("profile.error_avatar");
       setErr(msg);
       toast.error(msg);
     }
@@ -80,14 +82,14 @@ const ProfileSettings = () => {
 
   const validateUsername = (username) => {
     if (!/^[A-Za-z0-9_-]{3,30}$/.test(username)) {
-      return "Username must be 3-30 characters: letters, numbers, underscore, hyphen only";
+      return t("profile.error_username");
     }
     return null;
   };
 
   const validateDisplayName = (displayName) => {
     if (displayName.length < 3 || displayName.length > 30) {
-      return "Username must be 3-30 characters";
+      return t("profile.error_displayname");
     }
     return null;
   };
@@ -143,51 +145,51 @@ const ProfileSettings = () => {
               </div>
               <div className="flex flex-row justify-center gap-4">
                 <input id="avatar_input" type="file" accept="image/*" className="btn" onChange={handleAvatarChange} hidden />
-                <button className="btn btn-primary" onClick={() => document.getElementById("avatar_input").click()}>Change Avatar</button>
-                <button className="btn btn-ghost btn-link" onClick={handleDeleteAvatar} disabled={!profile?.avatar_url}>Remove Avatar</button>
+                <button className="btn btn-primary" onClick={() => document.getElementById("avatar_input").click()}>{t("profile.change_avatar")}</button>
+                <button className="btn btn-ghost btn-link" onClick={handleDeleteAvatar} disabled={!profile?.avatar_url}>{t("profile.remove_avatar")}</button>
               </div>
             </div>
           </div>
 
           <div>
             <fieldset className="fieldset">
-              <legend className="fieldset-legend">Display Name</legend>
+              <legend className="fieldset-legend">{t("gen.display_name")}</legend>
               <input
                 type="text"
                 className="input w-96 validator"
                 defaultValue={profile?.display_name}
-                placeholder="Display Name"
+                placeholder={t("gen.display_name")}
                 minLength={3}
                 maxLength={30}
                 onChange={handleDisplayNameChange}
                 required
               />
-              <p className="validator-hint">Display name should be 3-30 characters</p>
+              <p className="validator-hint">{t("create_profile.display_name_criteria")}</p>
             </fieldset>
 
             <fieldset className="fieldset">
-              <legend className="fieldset-legend">Username</legend>
+              <legend className="fieldset-legend">{t("gen.username")}</legend>
               <input
                 type="text"
                 className="input w-96 validator"
                 defaultValue={profile?.username}
-                placeholder="Username"
+                placeholder={t("gen.username")}
                 minLength={3}
                 maxLength={30}
                 onChange={handleUsernameChange}
                 required
               />
-              <p className="validator-hint">Username should be 3-30 characters</p>
+              <p className="validator-hint">{t("create_profile.username_criteria")}</p>
             </fieldset>
 
             <fieldset className="fieldset mb-8">
-              <legend className="fieldset-legend">About me</legend>
+              <legend className="fieldset-legend">{t("profile.about_me")}</legend>
               <textarea
                 type="text"
                 maxLength="300"
                 className="textarea h-48 w-96"
                 defaultValue={profile?.about}
-                placeholder="Username"
+                placeholder={t("profile.about_me")}
                 onChange={handleAboutChange}
               />
             </fieldset>
@@ -199,8 +201,8 @@ const ProfileSettings = () => {
         )}
 
         <div className="flex justify-center gap-4">
-          <button className="btn btn-primary" onClick={handleUpdate} disabled={!hasChange || loading}>{loading && <span className="loading loading-spinner" />} Save Changes</button>
-          <button className="btn btn-ghost link" onClick={() => window.location.reload()}>Reset</button>
+          <button className="btn btn-primary" onClick={handleUpdate} disabled={!hasChange || loading}>{loading && <span className="loading loading-spinner" />} {t("profile.save_changes")}</button>
+          <button className="btn btn-ghost link" onClick={() => window.location.reload()}>{t("profile.reset")}</button>
         </div>
       </div>
     </div>

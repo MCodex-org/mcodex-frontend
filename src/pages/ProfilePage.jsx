@@ -5,10 +5,12 @@ import { useParams } from "react-router-dom";
 import { ProfileCard } from "../components/ProfileComponents";
 import { Pagination, PostGrid } from "../components/PostComponents";
 import { useFetchPosts } from "../hooks/usePosts";
+import { useTranslation } from "react-i18next";
 
 const BASE_URL = import.meta.env.VITE_SERVER_URL;
 
 const ProfilePage = () => {
+  const { t } = useTranslation();
   const { username } = useParams();
   const [profile, setProfile] = useState(null);
   const [loading, setLoading] = useState(true);
@@ -22,7 +24,7 @@ const ProfilePage = () => {
         setFilterData((prev) => ({ ...prev, designer: res.data.data.id }));
       } catch (err) {
         console.log(err);
-        setError("Profile not found", err);
+        setError(t("profile.not_found"), err);
       } finally {
         setLoading(false);
       }

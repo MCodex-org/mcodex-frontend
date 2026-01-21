@@ -5,8 +5,10 @@ import { FilePond } from "react-filepond";
 import toast from "react-hot-toast";
 import { CircleX } from "lucide-react";
 import { useAuthStore } from "../stores/authStore";
+import { useTranslation } from "react-i18next";
 
 const CreatePost = ({ setPostId }) => {
+  const { t } = useTranslation();
   const { profile } = useAuthStore();
   const [postData, setPostData] = useState({
     designers: "",
@@ -25,7 +27,7 @@ const CreatePost = ({ setPostId }) => {
 
   useEffect(() => {
     if (isSuccess) {
-      toast.success("Post created successfully");
+      toast.success(t("create_post.success_message"));
       setErr(null);
       setPostId(res.id);
     }
@@ -33,7 +35,7 @@ const CreatePost = ({ setPostId }) => {
 
   useEffect(() => {
     if (isError) {
-      const errorMsg = error?.response?.data?.message || error?.message || "Failed to create post";
+      const errorMsg = error?.response?.data?.message || error?.message || t("create_post.error_message");
       setErr(errorMsg);
       toast.error(errorMsg);
     }
@@ -41,19 +43,19 @@ const CreatePost = ({ setPostId }) => {
 
   const validatePostData = () => {
     if (postData.schems.length === 0 && postData.wdl.length === 0) {
-      throw new Error("Atleast 1 schematic or world download required");
+      throw new Error(t("create_post.schem_wdl_required"));
     }
 
     if (postData.images.length === 0) {
-      throw new Error("At least one image is required");
+      throw new Error(t("create_post.image_required"));
     }
 
     if (!postData.subs || postData.subs.length === 0) {
-      throw new Error("Please select at least one category");
+      throw new Error(t("create_post.category_required"));
     }
 
     if (!postData.tags || postData.tags.length === 0) {
-      throw new Error("Please add at least one tag");
+      throw new Error(t("create_post.tag_required"));
     }
     
     return;
@@ -81,7 +83,7 @@ const CreatePost = ({ setPostId }) => {
 
       mutate(finalData);
     } catch (submitErr) {
-      const errorMsg = submitErr?.message || "An unexpected error occurred";
+      const errorMsg = submitErr?.message || t("create_post.unexpected_error");
       setErr(errorMsg);
       toast.error(errorMsg);
     }
@@ -124,7 +126,7 @@ const CreatePost = ({ setPostId }) => {
   return (
     <div>
       <fieldset className="fieldset">
-        <legend className="fieldset-legend">Designer/Uploader</legend>
+        <legend className="fieldset-legend">{t("gen.designer")}/{t("gen.uploader")}</legend>
         <input
           type="text"
           className="input validator w-auto"
@@ -132,31 +134,31 @@ const CreatePost = ({ setPostId }) => {
           maxLength="32"
           disabled
         />
-        <p className="label">Only upload your own designs</p>
+        <p className="label">{t("create_post.only_own_designs")}</p>
 
-        <legend className="fieldset-legend">Other designers</legend>
+        <legend className="fieldset-legend">{t("create_post.other_designers")}</legend>
         <MentionInput postData={postData} setPostData={setPostData} />
-        <p className="label">Separate values using comma. Use @ tag to mention users with an MCodex account.</p>
+        <p className="label">{t("create_post.other_designers_info")}</p>
 
-        <legend className="fieldset-legend">Categories/Subcategories</legend>
+        <legend className="fieldset-legend">{t("gen.categories")}/{t("gen.subcategories")}</legend>
         <CategorySelector postData={postData} setPostData={setPostData} />
 
-        <legend className="fieldset-legend">Tags</legend>
+        <legend className="fieldset-legend">{t("gen.tags")}</legend>
         <TagSelector postData={postData} setPostData={setPostData} required showSelected />
 
-        <legend className="fieldset-legend">Versions</legend>
+        <legend className="fieldset-legend">{t("gen.versions")}</legend>
         <VersionSelector postData={postData} setPostData={setPostData} />
 
-        <legend className="fieldset-legend">Total Rate(per Hour)</legend>
+        <legend className="fieldset-legend">{t("create_post.total_rate")}</legend>
         <input
           type="number"
           className="input validator w-auto"
           value={postData.total_rate || ""}
           onChange={(e) => handleDataChange("total_rate", e.target.value)}
         />
-        <label className="label">Leave empty if not applicable</label>
+        <label className="label">{t("create_post.leave_empty")}</label>
 
-        <legend className="fieldset-legend mt-4">Images</legend>
+        <legend className="fieldset-legend mt-4">{t("gen.images")}</legend>
         <FilePond
           name="images"
           allowMultiple={true}
@@ -164,10 +166,11 @@ const CreatePost = ({ setPostId }) => {
           maxFiles={10}
           onupdatefiles={(fileItems) => handleFileUpdate("images", fileItems)}
           credits={false}
+          labelIdle={t("create_post.file_input_placeholder")}
         />
-        <label className="label">Upto 10 Images allowed. Max size 10 MB per Image. 1st Image will be used a thumbnail.</label>
+        <label className="label">{t("create_post.image_info")}</label>
 
-        <legend className="fieldset-legend mt-4">Schematics</legend>
+        <legend className="fieldset-legend mt-4">{t("gen.schematics")}</legend>
         <FilePond
           name="schems"
           allowMultiple={true}
@@ -175,18 +178,20 @@ const CreatePost = ({ setPostId }) => {
           maxFiles={5}
           onupdatefiles={(fileItems) => handleFileUpdate("schems", fileItems)}
           credits={false}
+          labelIdle={t("create_post.file_input_placeholder")}
         />
-        <label className="label">Upto 5 schematic files allowed. Max size 100 KB per file.</label>
+        <label className="label">{t("create_post.schem_info")}</label>
 
-        <legend className="fieldset-legend mt-4">World Download</legend>
+        <legend className="fieldset-legend mt-4">{t("gen.world_download")}</legend>
         <FilePond
           name="wdl"
           onupdatefiles={(fileItems) => handleFileUpdate("wdl", fileItems)}
           credits={false}
+          labelIdle={t("create_post.file_input_placeholder")}
         />
-        <label className="label">Only 1 file allowed. Upload as ZIP. Max size 30 MB.</label>
+        <label className="label">{t("create_post.wdl_info")}</label>
 
-        <legend className="fieldset-legend mt-4">Videos</legend>
+        <legend className="fieldset-legend mt-4">{t("gen.videos")}</legend>
         <VideoInput postData={postData} setPostData={setPostData} />
         <label className="label">
           <input
@@ -194,9 +199,9 @@ const CreatePost = ({ setPostId }) => {
             className="checkbox"
             onChange={(e) => handleDataChange("has_tutorial", e.target.checked)}
           />
-          Select if any of the video(s) linked above is a tutorial
+          {t("create_post.is_tutorial")}
         </label>
-        <legend className="label">Upto 5 videos allowed</legend>
+        <legend className="label">{t("create_post.video_info")}</legend>
 
         <label className="label mt-6">
           <input
@@ -205,7 +210,7 @@ const CreatePost = ({ setPostId }) => {
             onChange={(e) => handleDataChange("allow_changes", e.target.checked)}
             defaultChecked={true}
           />
-          Allow other users to suggest changes for this post
+          {t("create_post.allow_changes")}
         </label>
 
         <label className="label">
@@ -215,7 +220,7 @@ const CreatePost = ({ setPostId }) => {
             onChange={(e) => handleDataChange("allow_translations", e.target.checked)}
             defaultChecked={true}
           />
-          Allow other users to suggest translations for this post
+          {t("create_post.allow_translations")}
         </label>
 
         <label className="label">
@@ -225,7 +230,7 @@ const CreatePost = ({ setPostId }) => {
             onChange={(e) => handleDataChange("allow_addons", e.target.checked)}
             defaultChecked={true}
           />
-          Allow other users to link addons(storage system, kill chamber, etc) for this build
+          {t("create_post.allow_addons")}
         </label>
 
         {err && (
@@ -234,7 +239,7 @@ const CreatePost = ({ setPostId }) => {
 
         <div className="flex justify-center mt-4">
           <button onClick={handleSubmit} disabled={isPending} className="btn btn-primary w-max">
-            {(isPending && <span className="loading loading-spinner" />) || <>Submit & Next</>}
+            {(isPending && <span className="loading loading-spinner" />) || <>{t("create_post.submit_next")}</>}
           </button>
         </div>
 

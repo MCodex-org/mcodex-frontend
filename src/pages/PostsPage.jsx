@@ -3,8 +3,12 @@ import { useSearchParams } from "react-router-dom";
 import { Filters, Pagination, PostGrid, SearchBar, Sort } from "../components/PostComponents";
 import cover from "/1099438.png";
 import { useFetchPosts } from "../hooks/usePosts";
+import { useTranslation } from "react-i18next";
+import i18n from "../i18n";
 
 const PostsPage = () => {
+  const { t } = useTranslation();
+  const lang = i18n.language;
   const [searchParams, setSearchParams] = useSearchParams();
   const [filterData, setFilterData] = useState({
     search: searchParams.get("search") || "",
@@ -20,9 +24,10 @@ const PostsPage = () => {
       without: searchParams.get("without")?.split(",") || []
     },
     version: searchParams.get("version") || "",
-    sort: searchParams.get("sort") || "latest"
+    sort: searchParams.get("sort") || "latest",
+    otherLang: localStorage.getItem("otherLang") === "true"
   });
-  const { data: posts, isPending } = useFetchPosts(filterData);
+  const { data: posts, isPending } = useFetchPosts(filterData, lang);
   
   useEffect(() => {
     const params = {};
@@ -53,7 +58,7 @@ const PostsPage = () => {
         <SearchBar filterData={filterData} setFilterData={setFilterData} />
         <Sort filterData={filterData} setFilterData={setFilterData} />
       </div>
-      {posts?.length === 0 && <div className="p-4 text-2xl">No posts available</div>}
+      {posts?.length === 0 && <div className="p-4 text-2xl">{t("post.no_posts")}</div>}
       <PostGrid posts={posts} isPending={isPending} />
       <Pagination filterData={filterData} setFilterData={setFilterData} totalPageCount={Math.ceil(posts?.[0]?.count / 50)} />
     </div>

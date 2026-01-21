@@ -4,8 +4,10 @@ import { CategorySelector, MentionInput, TagSelector, VersionSelector, VideoInpu
 import { useNavigate } from "react-router-dom";
 import { CircleX } from "lucide-react";
 import toast from "react-hot-toast";
+import { useTranslation } from "react-i18next";
 
 const EditPost = ({ postId }) => {
+  const { t } = useTranslation();
   const { data: post, isPending: isFetching, error } = useFetchPost(postId);
   const { mutate, isPending, isSuccess, isError, error: updateError } = useUpdatePost();
   const [postData, setPostData] = useState({});
@@ -39,7 +41,7 @@ const EditPost = ({ postId }) => {
 
   useEffect(() => {
     if (isSuccess) {
-      toast.success("Post updated successfully");
+      toast.success(t("edit_post.success_message"));
       setErr(null);
       navigate(`/posts/${postId}`);
     }
@@ -47,7 +49,7 @@ const EditPost = ({ postId }) => {
 
   useEffect(() => {
     if (isError) {
-      const errorMsg = updateError?.response?.data?.message || updateError?.message || "Failed to update post";
+      const errorMsg = updateError?.response?.data?.message || updateError?.message || t("edit_post.error_message");
       setErr(errorMsg);
       toast.error(errorMsg);
     }
@@ -75,11 +77,11 @@ const EditPost = ({ postId }) => {
     }*/
 
     if (!postData.subs || postData.subs.length === 0) {
-      throw new Error("Please select at least one category");
+      throw new Error(t("create_post.category_required"));
     }
 
     if (!postData.tags || postData.tags.length === 0) {
-      throw new Error("Please add at least one tag");
+      throw new Error(t("create_post.tag_required"));
     }
     
     return;
@@ -123,7 +125,7 @@ const EditPost = ({ postId }) => {
       console.log("FINAL:", finalData);
       mutate(finalData);
     } catch (submitErr) {
-      const errorMsg = submitErr?.message || "An unexpected error occurred";
+      const errorMsg = submitErr?.message || t("create_post.unexpected_error");
       setErr(errorMsg);
       toast.error(errorMsg);
     }
@@ -133,7 +135,7 @@ const EditPost = ({ postId }) => {
     <div>
       {postData.filled &&
         <fieldset className="fieldset">
-          <legend className="fieldset-legend">Designer/Uploader</legend>
+          <legend className="fieldset-legend">{t("gen.designer")}/{t("gen.uploader")}</legend>
           <input
             type="text"
             className="input validator w-auto"
@@ -142,29 +144,29 @@ const EditPost = ({ postId }) => {
             disabled
           />
 
-          <legend className="fieldset-legend">Other designers</legend>
+          <legend className="fieldset-legend">{t("create_post.other_designers")}</legend>
           <MentionInput postData={postData} setPostData={setPostData} />
-          <p className="label">Separate values using comma. Use @ tag to mention users with an MCodex account.</p>
+          <p className="label">{t("create_post.other_designers_info")}</p>
 
-          <legend className="fieldset-legend">Categories/Subcategories</legend>
+          <legend className="fieldset-legend">{t("gen.categories")}/{t("gen.subcategories")}</legend>
           <CategorySelector postData={postData} setPostData={setPostData} />
 
-          <legend className="fieldset-legend">Tags</legend>
+          <legend className="fieldset-legend">{t("gen.tags")}</legend>
           <TagSelector postData={postData} setPostData={setPostData} required showSelected />
 
-          <legend className="fieldset-legend">Versions</legend>
+          <legend className="fieldset-legend">{t("gen.versions")}</legend>
           <VersionSelector postData={postData} setPostData={setPostData} />
 
-          <legend className="fieldset-legend">Total Rate(per Hour)</legend>
+          <legend className="fieldset-legend">{t("create_post.total_rate")}</legend>
           <input
             type="number"
             className="input validator w-auto"
             value={postData.total_rate || ""}
             onChange={(e) => handleDataChange("total_rate", e.target.value)}
           />
-          <label className="label">Leave empty if not applicable</label>
+          <label className="label">{t("create_post.leave_empty")}</label>
 
-          <legend className="fieldset-legend mt-4">Videos</legend>
+          <legend className="fieldset-legend mt-4">{t("gen.videos")}</legend>
           <VideoInput postData={postData} setPostData={setPostData} />
           <label className="label">
             <input
@@ -172,9 +174,9 @@ const EditPost = ({ postId }) => {
               className="checkbox"
               onChange={(e) => handleDataChange("has_tutorial", e.target.checked)}
             />
-            Select if any of the video(s) linked above is a tutorial
+            {t("create_post.is_tutorial")}
           </label>
-          <legend className="label">Upto 5 videos allowed</legend>
+          <legend className="label">{t("create_post.video_info")}</legend>
 
           <label className="label mt-6">
             <input
@@ -183,7 +185,7 @@ const EditPost = ({ postId }) => {
               onChange={(e) => handleDataChange("allow_changes", e.target.checked)}
               checked={postData?.allow_changes}
             />
-            Allow other users to suggest changes for this post
+            {t("create_post.allow_changes")}
           </label>
 
           <label className="label">
@@ -193,7 +195,7 @@ const EditPost = ({ postId }) => {
               onChange={(e) => handleDataChange("allow_translations", e.target.checked)}
               checked={postData?.allow_translations}
             />
-            Allow other users to suggest translations for this post
+            {t("create_post.allow_translations")}
           </label>
 
           <label className="label">
@@ -203,7 +205,7 @@ const EditPost = ({ postId }) => {
               onChange={(e) => handleDataChange("allow_addons", e.target.checked)}
               checked={postData?.allow_addons}
             />
-            Allow other users to link addons(storage system, kill chamber, etc) for this build
+            {t("create_post.allow_addons")}
           </label>
 
           {err && (
@@ -212,7 +214,7 @@ const EditPost = ({ postId }) => {
 
           <div className="flex justify-center mt-4">
             <button onClick={handleSubmit} disabled={isPending} className="btn btn-primary w-max">
-              {(isPending && <span className="loading loading-spinner" />) || <>Submit</>}
+              {(isPending && <span className="loading loading-spinner" />) || <>{t("create_post.submit")}</>}
             </button>
           </div>
         </fieldset>

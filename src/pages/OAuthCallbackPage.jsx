@@ -1,8 +1,10 @@
 import { useEffect, useState } from "react";
 import { useAuthStore } from "../stores/authStore";
 import { useNavigate, useLocation } from "react-router-dom";
+import { useTranslation } from "react-i18next";
 
 const OAuthCallbackPage = () => {
+  const { t } = useTranslation();
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const { handleOAuthCallback } = useAuthStore();
@@ -59,7 +61,7 @@ const OAuthCallbackPage = () => {
       <div className="flex h-screen justify-center items-center">
         <div className="fieldset bg-base-200 border-base-300 rounded-box w-xs border p-4">
           <p className="text-error text-center">{error}</p>
-          <p className="text-sm text-center mt-2">Redirecting to login page...</p>
+          <p className="text-sm text-center mt-2">{t("auth.redirect_login")}</p>
         </div>
       </div>
     );

@@ -2,8 +2,10 @@ import { useState } from "react";
 import { useAuthStore } from "../stores/authStore";
 import { Link, useNavigate } from "react-router-dom";
 import { SquareLibrary } from "lucide-react";
+import { useTranslation } from "react-i18next";
 
 const Login = () => {
+  const { t } = useTranslation();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(false);
@@ -56,7 +58,7 @@ const Login = () => {
         setLoading(false);
       }
     } catch (err) {
-      setError(err.message || "Failed to sign in with Google");
+      setError(err.message || t("auth.error_google_login"));
       setLoading(false);
     }
   };
@@ -72,7 +74,7 @@ const Login = () => {
         setLoading(false);
       }
     } catch (err) {
-      setError(err.message || "Failed to sign in with GitHub");
+      setError(err.message || t("auth.error_github_login"));
       setLoading(false);
     }
   };
@@ -82,10 +84,10 @@ const Login = () => {
   } else if(profile) {
     return (
       <form className="fieldset bg-base-200 border-base-300 rounded-box w-xs border p-4">
-        <p className="text-xl mb-2">You're already logged in</p>
-        <Link to="/dashboard" className="btn btn-primary mt-2">Go to dashboard</Link>
+        <p className="text-xl mb-2">{t("auth.already_logged_in")}</p>
+        <Link to="/dashboard" className="btn btn-primary mt-2">{t("auth.go_to_dashboard")}</Link>
         <button onClick={handleLogout} className="btn btn-error mt-2">
-          {(loading && <span className="loading loading-spinner" />) || <>Logout</>}
+          {(loading && <span className="loading loading-spinner" />) || <>{t("gen.log_out")}</>}
         </button>
         {error && <p className='text-error text-center pt-4'>{error}</p>}
       </form>
@@ -93,10 +95,10 @@ const Login = () => {
   } else if (user) {
     return (
       <form className="fieldset bg-base-200 border-base-300 rounded-box w-xs border p-4">
-        <p className="text-xl mb-2">Already logged in</p>
-        <Link to="/createprofile" className="btn btn-primary mt-2">Finish your profile</Link>
+        <p className="text-xl mb-2">{t("auth.already_logged_in")}</p>
+        <Link to="/createprofile" className="btn btn-primary mt-2">{t("auth.finish_your_profile")}</Link>
         <button onClick={handleLogout} className="btn btn-error mt-2">
-          {(loading && <span className="loading loading-spinner" />) || <>Logout</>}
+          {(loading && <span className="loading loading-spinner" />) || <>{t("gen.log_out")}</>}
         </button>
         {error && <p className='text-error text-center pt-4'>{error}</p>}
       </form>
@@ -111,22 +113,22 @@ const Login = () => {
       </Link>
       
       <form onSubmit={handleLogin} className="fieldset bg-base-200 border-base-300 rounded-box w-xs border p-4">
-        <legend className="fieldset-legend">Log in</legend>
+        <legend className="fieldset-legend">{t("gen.log_in")}</legend>
 
-        <label className="label">Email</label>
-        <input onChange={(e) => setEmail(e.target.value)} type="email" className="input" placeholder="Email" />
+        <label className="label">{t("auth.email")}</label>
+        <input onChange={(e) => setEmail(e.target.value)} type="email" className="input" placeholder={t("auth.email")} />
 
-        <label className="label">Password</label>
-        <input onChange={(e) => setPassword(e.target.value)} type="password" className="input" placeholder="Password" />
+        <label className="label">{t("auth.password")}</label>
+        <input onChange={(e) => setPassword(e.target.value)} type="password" className="input" placeholder={t("auth.password")} />
 
-        <p>New to MCodex? <Link to="/register" className="text-primary">Create an account</Link></p>
+        <p>{t("auth.new_to_mcodex")} <Link to="/register" className="text-primary">{t("auth.create_an_account")}</Link></p>
         {error && <p className='text-error text-center pt-4'>{error}</p>}
 
         <button type="submit" disabled={loading} className="btn btn-neutral mt-4 w-full">
-          {(loading && <span className="loading loading-spinner" />) || <>Log in</>}
+          {(loading && <span className="loading loading-spinner" />) || <>{t("gen.log_in")}</>}
         </button>
 
-        <div className="divider">OR</div>
+        <div className="divider">{t("auth.or")}</div>
 
         <button 
           type="button" 
@@ -142,7 +144,7 @@ const Login = () => {
                 <path fill="currentColor" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z"/>
                 <path fill="currentColor" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"/>
               </svg>
-              Sign in with Google
+              {t("auth.google_sign_in")}
             </>
           )}
         </button>
@@ -158,7 +160,7 @@ const Login = () => {
               <svg className="w-5 h-5 mr-2" viewBox="0 0 24 24" fill="currentColor">
                 <path d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z"/>
               </svg>
-              Sign in with GitHub
+              {t("auth.github_sign_in")}
             </>
           )}
         </button>
