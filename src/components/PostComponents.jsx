@@ -115,13 +115,13 @@ export const PostCard = ({ post }) => {
 
   return (
     <div
-      className='card bg-base-300 min-w-72 shadow-md transition hover:shadow-2xl hover:scale-102 duration-300 cursor-pointer'
+      className="card bg-base-300 min-w-72 shadow-md transition hover:shadow-2xl hover:scale-102 duration-300 cursor-pointer"
       onClick={() => navigate(`/posts/${post.id}`)}
     >
-      <figure className='relative bg-base-200'>
-        <img className='h-48 object-cover' src={CDN_URL + "/" + post.thumbnail} />
+      <figure className="relative bg-base-200">
+        <img className="h-48 object-cover" src={CDN_URL + "/" + post.thumbnail} />
         <div className="absolute top-2 right-2 mx-1">
-          <div className="flex items-center">
+          <div className="flex items-center bg-base-300 p-0.5 pe-1.75 rounded">
             <ArrowBigUp className="mx-1" size={16} color="orange" fill="orange" />
             <span className="text-md">{post.cached_vote_count}</span>
           </div>
@@ -130,7 +130,7 @@ export const PostCard = ({ post }) => {
         {post.recommended && <div className="badge badge-info badge-xs">{t("gen.recommended")}</div>}
         </div>
       </figure>
-      <div className="card-body">
+      <div className="card-body p-4">
         <div className="line-clamp-1">
           {post.tags?.map(t => {
             const tag = findTag(t);
@@ -144,10 +144,10 @@ export const PostCard = ({ post }) => {
                 <img src={CDN_URL + "/" + (post.owner.avatar_url ? post.owner.avatar_url : "Portrait_Placeholder.png")} />
               </div>
             </div>
-            <h1 className='card-title line-clamp-2'>{post.title}</h1>
+            <h1 className="card-title line-clamp-2">{post.title}</h1>
           </div>
         </div>
-        <div className='card-actions justify-between items-center'>
+        <div className="card-actions justify-between items-center mt-2">
           <div>
             <p className="text-primary text-xs" style={{
                 whiteSpace: "nowrap",
@@ -997,7 +997,7 @@ export const DownloadsModal = ({ postId }) => {
   return (
     <div>
       <button
-        className="btn btn-square btn-primary mx-2"
+        className="btn btn-square btn-primary"
         onClick={handleShowDownloads}
       >
         { isFetching ? <span className="loading loading-spinner" /> : <Download /> }
