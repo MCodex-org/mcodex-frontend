@@ -90,6 +90,7 @@ const CreatePostTranslation = ({ postId }) => {
             <option value="en">English</option>
             <option value="ru" hidden>Русский</option>
             <option value="zh">简体中文</option>
+            <option value="tr">Türkçe</option>
             <option value="es" hidden>Español</option>
           </select>
           <p className="validator-hint">{t("gen.required")}</p>

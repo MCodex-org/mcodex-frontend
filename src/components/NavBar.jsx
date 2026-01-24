@@ -11,7 +11,8 @@ const LanguageSelector = () => {
   const LANGUAGES = [
     { code: "en", name: "English" },
     //{ code: "ru", name: "Русский" },
-    { code: "zh", name: "简体中文" }
+    { code: "zh", name: "简体中文" },
+    { code: "tr", name: "Türkçe"}
   ]
 
   return (
