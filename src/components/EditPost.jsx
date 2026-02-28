@@ -19,8 +19,8 @@ const EditPost = ({ postId }) => {
       .filter(d => d.user_id !== post.owner_id)
       .map(d => d.username ? "@" + d.username : d.name)
       .join(", ");
-    const tags = post?.tags.map(t => t.id);
-    const subs = post?.sub_categories.map(s => s.id);
+    const tags = post?.tags;
+    const subs = post?.sub_categories;
     const versions = post?.versions.map(v => v.id);
 
     if (post) {
