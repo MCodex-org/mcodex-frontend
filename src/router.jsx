@@ -1,6 +1,5 @@
-import { createBrowserRouter } from "react-router-dom";
+import { createBrowserRouter, Navigate } from "react-router-dom";
 import App from "./App";
-import HomePage from "./pages/HomePage.jsx"
 import RegisterPage from "./pages/RegisterPage.jsx";
 import CreateProfilePage from "./pages/CreateProfilePage.jsx";
 import LoginPage from "./pages/LoginPage.jsx";
@@ -21,7 +20,7 @@ const router = createBrowserRouter([
     path: "/",
     element: <App />,
     children: [
-      { index: true, element: <HomePage /> },
+      { index: true, element: <Navigate to="/posts" replace /> },
       { path: "posts", element: <PostsPage /> },
       { path: "posts/:id", element: <PostPage /> },
       { path: "dashboard", element: <AuthGuard><DashboardPage /></AuthGuard> },
