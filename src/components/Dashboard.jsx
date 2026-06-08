@@ -55,6 +55,7 @@ const PostList = ({ posts, refetch }) => {
                   <div tabIndex={0} role="button" className="btn btn-ghost btn-square btn-sm"><SquarePen size={16} /></div>
                   <ul tabIndex="-1" className="menu dropdown-content bg-base-200 rounded-box z-1 w-52 p-2 shadow-xl">
                     <li><Link to={`/editpost/${post.id}`}>{t("dashboard.edit_post")}</Link></li>
+                    <li><Link to={`/editpostfiles/${post.id}`}>{t("dashboard.edit_post_files")}</Link></li>
                     {post.available_translations?.map(tr => (<li key={tr}><Link to={`/edittranslation/${tr}/${post.id}`}>{t("dashboard.edit_translation", { tr: tr })}</Link></li>))}
                     <li><Link to={`/addtranslation/${post.id}`}>{t("dashboard.add_new_translation")}</Link></li>
                     <li>

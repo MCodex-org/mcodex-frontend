@@ -61,6 +61,24 @@ const fetchPost = async (postId, lang) => {
   }
 };
 
+const fetchPostFiles = async (postId) => {
+  try {
+    const response = await axios.get(`${BASE_URL}/api/posts/files/${postId}`);
+
+    if (!response.data.success) {
+      throw new Error(response.data.message || "Failed to fetch post files");
+    }
+    
+    console.log(response.data.data);
+    return response.data.data;
+  } catch (err) {
+    const errMsg = err.response?.data?.message || err.message || "An error occured";
+    const errorData = err.response?.data;
+    console.log(errorData?.message);
+    throw new Error(errMsg);
+  }
+};
+
 const fetchDownloads = async (postId) => {
   try {
     const response = await axios.get(`${BASE_URL}/api/posts/downloads/${postId}`);
@@ -156,6 +174,24 @@ const updatePost = async (postData) => {
   }
 };
 
+const updatePostFiles = async (postData) => {
+  try {
+    const response = await axios.put(`${BASE_URL}/api/posts/files/${postData.get("post_id")}`, postData);
+
+    if (!response.data.success) {
+      throw new Error(response.data.message || "Failed to update post");
+    }
+    
+    return response.data.data;
+
+  } catch (err) {
+    const errMsg = err.response?.data?.message || err.message || "An error occured";
+    const errorData = err.response?.data;
+    console.log(errorData?.message);
+    throw new Error(errMsg);
+  }
+};
+
 const updatePostTranslation = async ({ postId, lang, translationData }) => {
   try {
     const response = await axios.put(`${BASE_URL}/api/posts/${postId}/translations/${lang}`, translationData);
@@ -188,6 +224,14 @@ export const useFetchPost = (postId, lang) => {
   return useQuery({
     queryKey: ["post", postId, lang],
     queryFn: () => fetchPost(postId, lang),
+    enabled: !!postId
+  });
+};
+
+export const useFetchPostFiles = (postId) => {
+  return useQuery({
+    queryKey: ["postFiles", postId],
+    queryFn: () => fetchPostFiles(postId),
     enabled: !!postId
   });
 };
@@ -243,6 +287,20 @@ export const useUpdatePost = () => {
     onSuccess: (data) => {
       queryClient.invalidateQueries({ queryKey: ['posts'] });
       queryClient.invalidateQueries({ queryKey: ['post'] });
+    },
+    onError: (error) => {
+      console.error("Post update failed:", error.message);
+    }
+  });
+};
+
+export const useUpdatePostFiles = () => {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: updatePostFiles,
+    onSuccess: (data) => {
+      queryClient.invalidateQueries({ queryKey: ['postFiles'] });
     },
     onError: (error) => {
       console.error("Post update failed:", error.message);

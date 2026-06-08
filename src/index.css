@@ -3,6 +3,39 @@
 @plugin "@tailwindcss/typography";
 
 @import "filepond/dist/filepond.min.css";
+@import "filepond-plugin-image-preview/dist/filepond-plugin-image-preview.css";
+
+.image-pond .filepond--item {
+  width: calc(100% - 0.5em);
+}
+
+/* 2 columns */
+@media (min-width: 40em) {
+  .image-pond .filepond--item {
+    width: calc(50% - 0.5em);
+  }
+}
+
+/* 3 columns */
+@media (min-width: 60em) {
+  .image-pond .filepond--item {
+    width: calc(33.333% - 0.5em);
+  }
+}
+
+/* 4 columns */
+@media (min-width: 80em) {
+  .image-pond .filepond--item {
+    width: calc(25% - 0.5em);
+  }
+}
+
+/* 5 columns */
+@media (min-width: 100em) {
+  .image-pond .filepond--item {
+    width: calc(20% - 0.5em);
+  }
+}
 
 /* editor.css or global.css */
 .ProseMirror {
