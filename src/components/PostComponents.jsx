@@ -338,8 +338,7 @@ export const Filters = ({ realFilterData, setRealFilterData }) => {
                 checked={filterData.otherLang || false}
                 onChange={(e) => {
                   setFilterData((prev) => ({ ...prev, otherLang: e.target.checked }))
-                  localStorage.setItem("otherLang", e.target.checked);
-                  console.log("OTHER LANG:", localStorage.getItem("otherLang"));
+                  localStorage.setItem("onlySelectedLang", !e.target.checked);
                 }}
               /> <div>{t("filter.other_lang")}</div>
             </div>

@@ -25,7 +25,7 @@ const PostsPage = () => {
     },
     version: searchParams.get("version") || "",
     sort: searchParams.get("sort") || "latest",
-    otherLang: localStorage.getItem("otherLang") === "true"
+    otherLang: !(localStorage.getItem("onlySelectedLang") === "true")
   });
   const { data: posts, isPending } = useFetchPosts(filterData, lang);
   
