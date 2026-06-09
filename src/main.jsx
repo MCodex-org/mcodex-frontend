@@ -9,10 +9,14 @@ import { useMetaStore } from "./stores/metaStore";
 import axios from "axios";
 import "./index.css";
 import { Analytics } from "@vercel/analytics/react";
+import { registerPlugin } from "react-filepond";
+import FilePondPluginImagePreview from "filepond-plugin-image-preview";
 
 axios.defaults.withCredentials = true;
 await useAuthStore.getState().initialize();
 await useMetaStore.getState().fetchMetaData();
+
+registerPlugin(FilePondPluginImagePreview);
 
 const queryClient = new QueryClient({
   defaultOptions: {

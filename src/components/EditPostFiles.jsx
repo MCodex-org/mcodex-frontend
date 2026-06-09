@@ -1,13 +1,10 @@
 import { useEffect, useState } from "react";
-import { FilePond, registerPlugin } from "react-filepond";
-import FilePondPluginImagePreview from "filepond-plugin-image-preview";
+import { FilePond } from "react-filepond";
 import { useTranslation } from "react-i18next";
 import { useFetchPostFiles, useUpdatePostFiles } from "../hooks/usePosts";
 import { useNavigate } from "react-router-dom";
 import { CircleX } from "lucide-react";
 import toast from "react-hot-toast";
-
-registerPlugin(FilePondPluginImagePreview);
 
 const EditPostFiles = ({ postId }) => {
   const { t } = useTranslation();

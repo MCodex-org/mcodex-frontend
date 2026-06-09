@@ -160,6 +160,8 @@ const CreatePost = ({ setPostId }) => {
 
         <legend className="fieldset-legend mt-4">{t("gen.images")}</legend>
         <FilePond
+          className="image-pond"
+          imagePreviewHeight={200}
           name="images"
           allowMultiple={true}
           allowReorder={true}
