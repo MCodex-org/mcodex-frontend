@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { ArrowBigUp, ArrowBigDown, Bookmark, Download, ListFilter, Check, Plus, Minus } from "lucide-react";
+import { ArrowBigUp, ArrowBigDown, Bookmark, Download, ListFilter, Check, Plus, Minus, ScanEye } from "lucide-react";
 import { Link, useNavigate } from "react-router-dom";
 import { useMetaStore } from "../stores/metaStore";
 import Avatar from "./Avatar";
@@ -933,6 +933,27 @@ export const Credits = ({ credits }) => {
 
 export const Schems = ({ schems }) => {
   const { t } = useTranslation();
+  const [selectedSchem, setSelectedSchem] = useState(null);
+
+  const getViewerUrl = (viewer, schem) => {
+    return (viewer + encodeURIComponent(`${CDN_URL}/${encodeURIComponent(schem)}`));
+  };
+  
+  const openViewer = (schem) => {
+    const viewer = localStorage.getItem("viewer");
+    if (!viewer) {
+      setSelectedSchem(schem);
+      document.getElementById("viewer_selection_modal").showModal();
+      return;
+    }
+
+    window.open(getViewerUrl(viewer, schem), "_blank", "noopener,noreferrer");
+  };
+
+  const selectViewer = (viewer) => {
+    localStorage.setItem("viewer", viewer);
+    window.open(getViewerUrl(viewer, selectedSchem), "_blank", "noopener,noreferrer");
+  };
 
   return (
     <div>
@@ -940,12 +961,27 @@ export const Schems = ({ schems }) => {
         <li className="p-4 pb-2 text-xs opacity-60 tracking-wide">{t("gen.schematics")}</li>
 
         {schems?.map((schem, index) => (
-          <a key={index} href={CDN_URL + "/" + schem} download={schem.split("-").slice(1).join("-")} className="list-row items-center font-bold">
-            <div className="btn btn-primary btn-square"><Download /></div>
-            {schem.split("-").slice(1).join("-")}
-          </a>
+          <li key={index} className="list-row items-center font-bold gap-2">
+            <div className="flex gap-2 items-center">
+              <a href={CDN_URL + "/" + schem} download={schem.split("-").slice(1).join("-")} className="btn btn-primary btn-square"><Download /></a>
+              <button onClick={() => openViewer(schem)} className="btn btn-primary btn-soft btn-square"><ScanEye /></button>
+              {schem.split("-").slice(1).join("-")}
+            </div>
+          </li>
         ))}
       </ul>
+      <dialog id="viewer_selection_modal" className="modal">
+        <div className="modal-box">
+          <h3 className="font-bold text-lg mb-8">Select your preferred schematic viewer</h3>
+          <form method="dialog">
+            <div className="flex justify-around">
+              <button onClick={() => selectViewer("https://www.shulkr.com/viewer?import=1&url=")} className="btn btn-primary btn-outline">Shulkr.com</button>
+              <button onClick={() => selectViewer("https://schemat.io/view?url=")} className="btn btn-primary btn-outline">Schemat.io</button>
+              <button className="btn btn-primary btn-outline" disabled>Ending Credits</button>
+            </div>
+          </form>
+        </div>
+      </dialog>
     </div>
   );
 };
@@ -957,10 +993,10 @@ export const Wdl = ({ wdl }) => {
     <div>
       <ul className="list bg-base-200 rounded-box shadow-md mb-4 w-full">
         <li className="p-4 pb-2 text-xs opacity-60 tracking-wide">{t("gen.world_download")}</li>
-          <a href={CDN_URL + "/" + wdl} download={wdl?.split("-").slice(1).join("-")} className="list-row items-center font-bold">
-            <div className="btn btn-primary btn-square"><Download /></div>
+          <li className="list-row items-center font-bold">
+            <a href={CDN_URL + "/" + wdl} download={wdl?.split("-").slice(1).join("-")} className="btn btn-primary btn-square"><Download /></a>
             {wdl?.split("-").slice(1).join("-")}
-          </a>
+          </li>
       </ul>
     </div>
   );
