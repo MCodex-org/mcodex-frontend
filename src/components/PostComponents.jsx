@@ -189,6 +189,9 @@ export const PostGrid = ({ posts, isPending }) => {
         sm:grid-cols-2
         lg:grid-cols-3
         xl:grid-cols-4
+        3xl:grid-cols-5
+        4xl:grid-cols-6
+        5xl:grid-cols-8
         ">
         {posts?.map(post => {
           return <PostCard key={post.id} post={post} />
