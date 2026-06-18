@@ -102,7 +102,6 @@ const NavBar = () => {
           <SquareLibrary size={36} className="text-primary" strokeWidth={2.25} />
           <div className="flex font-bold text-2xl me-4 sm:me-8">
             <span className="bg-clip-text text-transparent bg-linear-to-r from-primary to-secondary">MCodex</span>
-            <span className="text-sm text-base-content ms-1">BETA</span>
           </div>
         </Link>
 
