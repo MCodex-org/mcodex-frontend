@@ -978,7 +978,7 @@ export const Schems = ({ schems }) => {
           <h3 className="font-bold text-lg mb-8">Select your preferred schematic viewer</h3>
           <form method="dialog">
             <div className="flex justify-around">
-              <button onClick={() => selectViewer("https://www.shulkr.com/viewer?import=1&url=")} className="btn btn-primary btn-outline">Shulkr.com</button>
+              <button onClick={() => selectViewer("https://www.shulkr.com/viewer?url=")} className="btn btn-primary btn-outline">Shulkr.com</button>
               <button onClick={() => selectViewer("https://schemat.io/view?url=")} className="btn btn-primary btn-outline">Schemat.io</button>
               <button className="btn btn-primary btn-outline" disabled>Ending Credits</button>
             </div>
