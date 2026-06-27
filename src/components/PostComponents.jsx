@@ -950,12 +950,12 @@ export const Schems = ({ schems }) => {
       return;
     }
 
-    window.open(getViewerUrl(viewer, schem), "_blank", "noopener,noreferrer");
+    window.open(getViewerUrl(viewer, schem), "_blank", "noopener");
   };
 
   const selectViewer = (viewer) => {
     localStorage.setItem("viewer", viewer);
-    window.open(getViewerUrl(viewer, selectedSchem), "_blank", "noopener,noreferrer");
+    window.open(getViewerUrl(viewer, selectedSchem), "_blank", "noopener");
   };
 
   return (
