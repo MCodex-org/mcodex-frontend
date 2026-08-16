@@ -79,6 +79,7 @@ const NavBar = () => {
                   <li><Link to="https://discord.gg/QgbuGgDhxf" target="_blank">{t("gen.tmc_resources_archive")}</Link></li>
                 </ul>
               </li>
+              <li><Link to="/extra">{t("gen.extra")}</Link></li>
               {user ?
                 <div>
                   <li><Link to="/createpost">{t("gen.upload")}</Link></li>
@@ -144,7 +145,7 @@ const NavBar = () => {
                 </ul>
               </details>
             </li>
-
+            <li><Link to="/extra">{t("gen.extra")}</Link></li>
 
           </ul>
         </div>

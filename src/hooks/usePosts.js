@@ -210,6 +210,50 @@ const updatePostTranslation = async ({ postId, lang, translationData }) => {
   }
 };
 
+const fetchExtraPosts = async (filterData) => {
+  try {
+    const response = await axios.get("https://minemev.com/api/search", {
+      params: filterData
+    });
+    
+    console.log(response.data);
+    return response.data;
+  } catch (err) {
+    const errMsg = err.response?.data?.message || err.message || "An error occured";
+    const errorData = err.response?.data;
+    console.error(errorData?.message);
+    throw new Error(errMsg);
+  }
+};
+
+const fetchExtraPost = async (vendor, postId) => {
+  try {
+    const response = await axios.get(`https://minemev.com/api/details/${vendor}/${postId}`);
+    
+    console.log(response.data);
+    return response.data;
+  } catch (err) {
+    const errMsg = err.response?.data?.message || err.message || "An error occured";
+    const errorData = err.response?.data;
+    console.log(errorData?.message);
+    throw new Error(errMsg);
+  }
+};
+
+const fetchExtraDownloads = async (vendor, postId) => {
+  try {
+    const response = await axios.get(`https://minemev.com/api/files/${vendor}/${postId}`);
+    
+    console.log(response.data);
+    return response.data;
+  } catch (err) {
+    const errMsg = err.response?.data?.message || err.message || "An error occured";
+    const errorData = err.response?.data;
+    console.log(errorData?.message);
+    throw new Error(errMsg);
+  }
+};
+
 
 
 export const useFetchPosts = (filterData, lang) => {
@@ -384,5 +428,28 @@ export const useVote = (postId) => {
       queryClient.invalidateQueries(["post", postId]);
       queryClient.invalidateQueries(["posts"]);
     }
+  });
+};
+
+export const useFetchExtraPosts = (filterData) => {
+  return useQuery({
+    queryKey: ["extraPosts", filterData],
+    queryFn: () => fetchExtraPosts(filterData),
+    keepPreviousData: true
+  });
+};
+
+export const useFetchExtraPost = (vendor, postId) => {
+  return useQuery({
+    queryKey: ["extraPost", vendor, postId],
+    queryFn: () => fetchExtraPost(vendor, postId),
+    enabled: !!postId
+  });
+}
+
+export const useFetchExtraDownloads = (vendor, postId) => {
+  return useQuery({
+    queryKey: ["extraDownloads", vendor, postId],
+    queryFn: () => fetchExtraDownloads(vendor, postId)
   });
 };
