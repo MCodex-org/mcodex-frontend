@@ -239,6 +239,7 @@ const ExtraPage = () => {
   const [vendors, setVendors] = useState(["minemev", "choculaterie", "redenmc"]);
   const [filterData, setFilterData] = useState({
     page: Number(searchParams.get("page")) || 1,
+    pagesize: 40,
     sort: searchParams.get("sort") || "newest",
     search: searchParams.get("search") || ""
   });
