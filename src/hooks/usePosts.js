@@ -213,7 +213,8 @@ const updatePostTranslation = async ({ postId, lang, translationData }) => {
 const fetchExtraPosts = async (filterData) => {
   try {
     const response = await axios.get("https://minemev.com/api/search", {
-      params: filterData
+      params: filterData,
+      withCredentials: false
     });
     
     console.log(response.data);
@@ -228,7 +229,9 @@ const fetchExtraPosts = async (filterData) => {
 
 const fetchExtraPost = async (vendor, postId) => {
   try {
-    const response = await axios.get(`https://minemev.com/api/details/${vendor}/${postId}`);
+    const response = await axios.get(`https://minemev.com/api/details/${vendor}/${postId}`, {
+      withCredentials: false
+    });
     
     console.log(response.data);
     return response.data;
@@ -242,7 +245,9 @@ const fetchExtraPost = async (vendor, postId) => {
 
 const fetchExtraDownloads = async (vendor, postId) => {
   try {
-    const response = await axios.get(`https://minemev.com/api/files/${vendor}/${postId}`);
+    const response = await axios.get(`https://minemev.com/api/files/${vendor}/${postId}`, {
+      withCredentials: false
+    });
     
     console.log(response.data);
     return response.data;
